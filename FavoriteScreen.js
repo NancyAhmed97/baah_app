@@ -18,30 +18,28 @@ import axios from "axios";
 import SwipeCards from "react-native-swipe-cards";
 import Icon from "react-native-vector-icons/EvilIcons";
 import { useNavigation } from "@react-navigation/native"; // Import useNavigation
+import { useSelector } from "react-redux";
 
 const { width } = Dimensions.get("window");
 
 const FavoriteScreen = () => {
-  const { favorites, toggleFavorite } = useFavorites();
   const [itemArr, setItem] = useState([])
-  const favoriteProfiles = profileData.filter((profile) =>
-    favorites.includes(profile.id)
-  );
-
-  useEffect(() => {
-    const checkLogin = async () => {
-
-      try {
-        const token = await AsyncStorage.getItem("login");
-
-        const response = await axios.post(`https://marriage-application.onrender.com/getfav?id=${JSON.parse(token).id}`);
-        setItem(response.data)
-      } catch (err) {
-        Alert.alert(err)
-      }
-    };
-    checkLogin();
-  }, [])
+  const userinfo = useSelector((state) => state);
+  // const favoriteProfiles = profileData.filter((profile) =>
+  //   favorites.includes(profile.id)
+  // );
+useEffect(() => {
+const getFavUsers=async()=>{
+  try {
+    const response = await axios.post(`https://marriage-application.onrender.com/getfav?id=${userinfo.user.userArray.id}`);
+     setItem(response.data)
+  } catch (err) {
+    Alert.alert(err)
+  }
+}
+getFavUsers()
+}, [itemArr])
+ 
   const NoMoreCards = () => (
     <View style={styles.noMoreCards}>
       <Text style={styles.noMoreCardsText}>لا توجد بطاقات أخرى</Text>
@@ -59,7 +57,7 @@ const FavoriteScreen = () => {
         <View style={styles.card}>
           <View style={{ flexDirection: "row-reverse", alignItems: "center" }}>
             <Image
-              source={card.image}
+              source={{uri:card.image}}
               style={styles.profileImage}
               resizeMode="cover"
             />

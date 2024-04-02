@@ -7,14 +7,16 @@ import {
   TextInput,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const LoginOTP = () => {
-  const [digits, setDigits] = useState(["", "", "", ""]);
+const LoginOTP = ({route}) => {
+  const [digits, setDigits] = useState(["", "", "", "","",""]);
   const [countdown, setCountdown] = useState(15); // 15 seconds countdown
   const navigation = useNavigation();
+  const phoneNumber = route.params?.phoneNumber
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -52,7 +54,9 @@ const LoginOTP = () => {
   };
 
   const handleNextClick = () => {
-    navigation.navigate("GeneralQ");
+    navigation.navigate("GeneralQ",{
+      phoneNumber:phoneNumber
+    });
   };
 
   const refs = Array.from({ length: digits.length }, () => React.createRef());
@@ -117,8 +121,8 @@ const styles = StyleSheet.create({
     marginTop: 190,
   },
   digitInput: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     fontSize: 24,
     textAlign: "center",
     backgroundColor: "#F2F2F2",

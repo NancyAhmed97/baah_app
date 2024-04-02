@@ -14,9 +14,14 @@ import { useFavorites } from "./FavoritesContext";
 import { useNavigation } from "@react-navigation/native"; // Import useNavigation
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { addFavoriteMethod, favoriteMethod, removeFavoriteMethod } from "./Redux/Favorite";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "./Firebase-config";
+import { messagesMethod } from "./Redux/Message";
+import { usersMethod } from "./Redux/users";
 
 const { width } = Dimensions.get("window");
-
 const data = [
   {
     id: 1,
@@ -45,21 +50,21 @@ const data = [
 ];
 
 
-const Card = ({ card, toggleFavorite, isFavorite }) => {
+const Card = ({ card, toggleFavorite, isFavorite, favArr }) => {
   const navigation = useNavigation();
-
+  const dispatch = useDispatch();
   const handleCardPress = async () => {
-    const token = await AsyncStorage.getItem("login");
-
     navigation.navigate("UserProfile", { userId: card.id });
   };
-
+  const userinfo = useSelector((state) => state);
+  console.log(userinfo.favorite);
+  const favStatus = favArr.filter((item) => { return card.id == item.id })
   return (
     <TouchableOpacity onPress={handleCardPress}>
       <View style={styles.card}>
         <View style={{ flexDirection: "row-reverse", alignItems: "center" }}>
           <Image
-            source={card.image}
+            source={{ uri: card.image }}
             style={styles.profileImage}
             resizeMode="cover"
           />
@@ -89,15 +94,14 @@ const Card = ({ card, toggleFavorite, isFavorite }) => {
         </View>
         <View style={styles.separator} />
         <Text style={styles.description}>
-          ابحث عن رجل صادق ويخاف الله، يحب الوناسة والعمل ومتفهم ومرح ويكون
-          مسؤول عن نفسه للزواج.
+          {card.pio}
         </Text>
         <View style={styles.infoBoxContainer}>{/* Info buttons... */}</View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.gradientButton, styles.messageButton]}
             onPress={() => {
-              navigation.navigate("Message", { userId: card.id });
+              navigation.navigate("chat", { userId: card.id, name: card.name, image: card.image });
             }}
           >
             <Icon name="envelope" size={30} style={styles.icon} />
@@ -106,12 +110,18 @@ const Card = ({ card, toggleFavorite, isFavorite }) => {
             style={[styles.gradientButton, styles.favoriteButton]}
             onPress={async () => {
               try {
-                const token = await AsyncStorage.getItem("login");
-                const response = await axios.post(`https://marriage-application.onrender.com/addtofav?id=${JSON.parse(token).id}&favId=${card.id}`);
+                const response = await axios.post(`https://marriage-application.onrender.com/addtofav?id=${userinfo.user.userArray.id}&favId=${card.id}`);
                 // Alert.alert(response.data)
                 if (response.status) {
+                  console.log(response.data);
                   toggleFavorite(card.id)
                   Alert.alert(response.data)
+                  if (response.data === "User added to fav") {
+                    dispatch(addFavoriteMethod(card))
+                  } else {
+                    dispatch(removeFavoriteMethod(card.id))
+
+                  }
 
                 }
               } catch (err) {
@@ -122,38 +132,62 @@ const Card = ({ card, toggleFavorite, isFavorite }) => {
             <Icon
               name="star"
               size={30}
-              style={[styles.icon, { color: isFavorite ? "#ECB7B7" : "white" }]} // Directly apply color change here
+              style={[styles.icon, { color: isFavorite || favStatus.length == 1 ? "#ECB7B7" : "white" }]} // Directly apply color change here
             />
           </TouchableOpacity>
         </View>
         <View style={styles.infoBoxContainer}>
-          <TouchableOpacity style={styles.infoButton}>
-            <Text style={styles.infoButtonText}>{card.marital_status_woman_man}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.infoButton}>
-            <Text style={styles.infoButtonText}>{card.religious_denomination}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.infoButton}>
-            <Text style={styles.infoButtonText}>{card.skin_woman_man}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.infoButton}>
-            <Text style={styles.infoButtonText}>{card.height_woman}cm</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.infoButton}>
-            <Text style={styles.infoButtonText}>{card.weight_woman}kg</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.infoButton}>
-            <Text style={styles.infoButtonText}>🚬 {card.smoking_drinking_woman_man}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.infoButton}>
-            <Text style={styles.infoButtonText}>{card.work_status_woman_man}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.infoButton}>
-            <Text style={styles.infoButtonText}>{card.need_kids_woman_man}👧</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.infoButton}>
-            <Text style={styles.infoButtonText}>{card.educational_level_woman_man}</Text>
-          </TouchableOpacity>
+          {card.marital_status_woman_man &&
+            <TouchableOpacity style={styles.infoButton}>
+              <Text style={styles.infoButtonText}>{card.marital_status_woman_man}</Text>
+            </TouchableOpacity>
+          }
+          {card.religious_denomination &&
+            <TouchableOpacity style={styles.infoButton}>
+              <Text style={styles.infoButtonText}>{card.religious_denomination}</Text>
+            </TouchableOpacity>
+          }
+          {card.skin_woman_man &&
+            <TouchableOpacity style={styles.infoButton}>
+              <Text style={styles.infoButtonText}>{card.skin_woman_man}</Text>
+            </TouchableOpacity>
+          }
+          {card.height_woman &&
+
+            <TouchableOpacity style={styles.infoButton}>
+              <Text style={styles.infoButtonText}>{card.height_woman}cm</Text>
+            </TouchableOpacity>
+          }
+          {card.weight_woman &&
+
+            <TouchableOpacity style={styles.infoButton}>
+              <Text style={styles.infoButtonText}>{card.weight_woman}kg</Text>
+            </TouchableOpacity>
+          }
+          {card.smoking_drinking_woman_man &&
+
+            <TouchableOpacity style={styles.infoButton}>
+              <Text style={styles.infoButtonText}>🚬 {card.smoking_drinking_woman_man}</Text>
+            </TouchableOpacity>
+          }
+          {card.work_status_woman_man &&
+
+            <TouchableOpacity style={styles.infoButton}>
+              <Text style={styles.infoButtonText}>{card.work_status_woman_man}</Text>
+            </TouchableOpacity>
+          }
+          {card.need_kids_woman_man &&
+
+            <TouchableOpacity style={styles.infoButton}>
+              <Text style={styles.infoButtonText}>{card.need_kids_woman_man}👧</Text>
+            </TouchableOpacity>
+          }
+          {card.educational_level_woman_man &&
+
+            <TouchableOpacity style={styles.infoButton}>
+              <Text style={styles.infoButtonText}>{card.educational_level_woman_man}</Text>
+            </TouchableOpacity>
+          }
         </View>
       </View>
     </TouchableOpacity>
@@ -169,20 +203,38 @@ const NoMoreCards = () => (
 const HomeScreen = () => {
   const { favorites, toggleFavorite } = useFavorites(); // Correctly use useFavorites
   const [itemArr, setItem] = useState([])
-  const navigation = useNavigation();
+  const [favArr, setFavArr] = useState([])
 
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const userinfo = useSelector((state) => state);
   useEffect(() => {
 
     const checkLogin = async () => {
 
       try {
-        const token = await AsyncStorage.getItem("login");
 
-        const response = await axios.post(`https://marriage-application.onrender.com/getall?gender=${JSON.parse(token).gender}`);
+        const response = await axios.post(`https://marriage-application.onrender.com/getall?gender=${userinfo.user.userArray.gender}`);
+        dispatch(usersMethod(response.data))
         setItem(response.data);
       } catch (err) {
         Alert.alert(err)
       }
+
+      // try {
+      //   const response = await axios.post(`https://marriage-application.onrender.com/getfav?id=${userinfo.user.userArray.id}`);
+      //   dispatch(favoriteMethod(response.data))
+      //   setFavArr(response.data)
+      // } catch (err) {
+      //   Alert.alert(err)
+      // }
+
+      const querySnapshot = await getDocs(collection(db, "messages"));
+      const x = firebase.firestore.docs.filter((item) => item.data().user === userinfo.user.userArray.id)
+      dispatch(messagesMethod(x))
+
+
+
     };
     checkLogin();
   }, [])
@@ -190,24 +242,6 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <View>
-        <TouchableOpacity
-          style={{ marginBottom: 22 }}
-          onPress={async()=>{
-            await AsyncStorage.removeItem('login');
-            navigation.navigate("Login");
-
-
-          }}
-        >
-          <Text
-            style={{
-              color: 'red',
-              fontWeight: "bold"
-            }}
-          >
-            تسجيل الخروج
-          </Text>
-        </TouchableOpacity>
 
       </View>
       <SwipeCards
@@ -217,6 +251,7 @@ const HomeScreen = () => {
             card={cardData}
             toggleFavorite={toggleFavorite}
             isFavorite={favorites.includes(cardData.id)}
+            favArr={favArr}
           />
         )}
         renderNoMoreCards={() => <NoMoreCards />}

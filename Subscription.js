@@ -1,4 +1,6 @@
+import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from "react-native";
@@ -6,6 +8,7 @@ import Swiper from "react-native-swiper";
 
 const Subscription = () => {
   const [selectedPlan, setSelectedPlan] = useState("");
+  const navigation = useNavigation()
 
   const handleSelectPlan = async (plan) => {
     setSelectedPlan(plan);
@@ -13,7 +16,6 @@ const Subscription = () => {
       const token = await AsyncStorage.getItem("login");
       const response = await axios.post(`https://marriage-application.onrender.com/upgrade/subscription?id=${JSON.parse(token).id}&subscription=${plan}`);
       if (response.status) {
-        console.log("subscription", JSON.parse(token).id);
         Alert.alert(response.data)
       }
 
@@ -32,18 +34,39 @@ const Subscription = () => {
     // } catch (err) {
     //   Alert.alert(err)
     // }
-    console.log("Selected plan:", plan);
   };
-useEffect(() => {
-const getUserSub=async()=>{
-  const token = await AsyncStorage.getItem("login");
-  setSelectedPlan(JSON.parse(token).subscription)
+  useEffect(() => {
+    const getUserSub = async () => {
+      const token = await AsyncStorage.getItem("login");
+      setSelectedPlan(JSON.parse(token).subscription)
 
-}
-getUserSub()
-}, [])
+    }
+    getUserSub()
+  }, [])
   return (
     <View style={styles.container}>
+      <View style={styles.circularButtonsContainer}>
+
+        <TouchableOpacity
+          style={styles.circularButton}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Ionicons name="arrow-back" size={24} color="#9B9B9B" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.circularButton}
+          onPress={() => {
+            navigation.navigate('PaymentScreen',{
+              selectedPlan:selectedPlan
+            });
+          }}
+        >
+          <Ionicons name="arrow-forward" size={24} color="#ECB7B7" />
+        </TouchableOpacity>
+      </View>
+
       <Swiper
         style={styles.wrapper}
         loop={true}
@@ -212,6 +235,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
     marginTop: -2,
+  },
+  circularButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+
+    marginTop: 10,
+    width: "100%"
+  },
+
+  circularButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 5,
+    borderWidth: 2,
+    borderColor: "#F2F2F2",
   },
 });
 

@@ -8,28 +8,71 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from "react-native";
 import CountryPicker from "react-native-country-picker-modal";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
 const Login = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("SA");
+  const [callingCode, setCallingCode] = useState("966");
   const [countryPickerVisible, setCountryPickerVisible] = useState(false);
+  const [userFounded, setUserFounded] = useState(false);
   const navigation = useNavigation();
 
   const onSelectCountry = (country) => {
-    setCountryCode(country.cca2);
     setCountryPickerVisible(false);
+    setCallingCode(country.callingCode[0]);
+    setCountryCode(country.cca2);
   };
 
   const toggleCountryPicker = () => {
     setCountryPickerVisible(!countryPickerVisible);
   };
 
-  const handleContinueClick = () => {
-    navigation.navigate("LoginOTP");
+  const handleContinueClick = async () => {
+    if (!phoneNumber) {
+      Alert.alert('رجاءا ادخال رقم التلفون')
+    } else {
+      try {
+        const response = await axios.post(`https://marriage-application.onrender.com/checkphone`, {
+          "phonenumber": phoneNumber
+
+        });
+
+        if (response.status === 200) {
+          console.log(response.data);
+          if (response.data === true) {
+            navigation.navigate("LogInPage");
+          } else {
+            navigation.navigate("LoginOTP", {
+              phoneNumber: '+' + callingCode + phoneNumber
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      }
+      // try {
+      //   const response = await axios.post(`https://marriage-application.onrender.com/check/phone?phone=${'+' + callingCode + phoneNumber}`);
+      //   if (response.status === 200) {
+      //     if (response.data === true) {
+      //       navigation.navigate("LogInPage");
+      //     } else {
+      //       navigation.navigate("LoginOTP", {
+      //         phoneNumber: '+' + callingCode + phoneNumber
+      //       });
+      //     }
+      //   }
+      // } catch (error) {
+      //   console.error('Error fetching data: ', error);
+      // }
+
+
+    }
   };
 
   const handlePreviousClick = () => {
@@ -42,7 +85,7 @@ const Login = () => {
         <View style={styles.container}>
           <TouchableOpacity
             onPress={() => handleContinueClick()}
-            style={styles.continueButton}
+            style={[styles.continueButton, { zIndex: 777777777777777 }]}
           >
             <Text style={styles.continueButtonText}>متابعة</Text>
           </TouchableOpacity>
@@ -52,6 +95,7 @@ const Login = () => {
               <CountryPicker
                 countryCode={countryCode}
                 // ... (your existing CountryPicker props)
+                onSelect={onSelectCountry}
               />
             </TouchableOpacity>
             <TextInput
@@ -67,9 +111,9 @@ const Login = () => {
           </View>
           <View style={styles.buttonBackground}>
             <TouchableOpacity
-            onPress={()=>{
-              navigation.navigate('LogInPage')
-            }}
+              onPress={() => {
+                navigation.navigate('LogInPage')
+              }}
             >
               <Text style={styles.buttonText}>لدي حساب بالفعل</Text>
             </TouchableOpacity>

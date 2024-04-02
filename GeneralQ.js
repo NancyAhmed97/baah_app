@@ -13,16 +13,23 @@ import ProgressBar from "react-native-progress/Bar";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import RNPickerSelect from "react-native-picker-select";
 import countries from "./countries.json";
+import customCountries from "./customCountry.json";
+import customCities from "./customCities.json";
 
-const GeneralQ = ({ navigation }) => {
+const GeneralQ = ({ navigation, route }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [userName, setUserName] = useState("");
   const [selectedGender, setSelectedGender] = useState(null);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [userBirthday, setUserBirthday] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [countryId, setCountryId] = useState(null);
+  const [selectedCountryName, setSelectedCountryName] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [city_country, setCity_country] = useState([]);
   const [selectedMathab, setSelectedMathab] = useState(null);
   const [selectedFamily, setSelectedFamily] = useState(null);
+  const phoneNumber = route.params?.phoneNumber
   const [minDate, setMinDate] = useState(() => {
     const currentDate = new Date();
     currentDate.setFullYear(currentDate.getFullYear() - 19);
@@ -80,15 +87,51 @@ const GeneralQ = ({ navigation }) => {
       setSelectedCountry(selected); // Set the entire selected country object
     }
   };
+  const handleSelectCountryName = (value,id) => {
+    const selected = customCountries.find((country) => country.name_ar === value);
+    if (selected) {
+      setSelectedCountryName(selected)
+      const cityArray=customCities.filter((item)=>item.country_id==id)
+      setCity_country(cityArray);
+    }
+  };
+  const handleSelectCity = (value) => {
+    const selected = customCities.find((city) => city.name_ar === value);
+    if (selected) {
+      setSelectedCity(selected); // Set the entire selected country object
+    }
+  };
 
   const handleNextClick = () => {
-    if (currentStep < 6) {
+    if (currentStep < 8) {
       setCurrentStep(currentStep + 1);
     } else {
       if (selectedGender === "Male") {
-        navigation.navigate("BoysQ");
+        navigation.navigate("BoysQ",{
+          phoneNumber:phoneNumber,
+          userName:userName,
+          selectedGender:selectedGender,
+          userBirthday:JSON.stringify(userBirthday),
+          selectedCountry:selectedCountry,
+          selectedCountryName:selectedCountryName,
+          selectedCity:selectedCity,
+          selectedMathab:selectedMathab,
+          selectedFamily:selectedFamily
+
+        });
       } else if (selectedGender === "Female") {
-        navigation.navigate("GirlsQ");
+        navigation.navigate("GirlsQ",{
+          phoneNumber:phoneNumber,
+          userName:userName,
+          selectedGender:selectedGender,
+          userBirthday:userBirthday,
+          selectedCountry:selectedCountry,
+          selectedCountryName:selectedCountryName,
+          selectedCity:selectedCity,
+          selectedMathab:selectedMathab,
+          selectedFamily:selectedFamily
+
+        });
       }
     }
   };
@@ -138,29 +181,29 @@ const GeneralQ = ({ navigation }) => {
       <View style={{ flex: 1, backgroundColor: "white", padding: 30 }}>
         <View style={styles.educationLevelButtons}>
           <TouchableOpacity
-            onPress={() => handleMathabSelection(1)}
-            style={getMathabStyle(1)}
+            onPress={() => handleMathabSelection("سنـــي")}
+            style={getMathabStyle("سنـــي")}
           >
             <Text style={styles.mathabText}>سنـــي</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleMathabSelection(2)}
-            style={getMathabStyle(2)}
+            onPress={() => handleMathabSelection("شيــــعــي")}
+            style={getMathabStyle("شيــــعــي")}
           >
             <Text style={styles.mathabText}>شيــــعــي</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleMathabSelection(3)}
-            style={getMathabStyle(3)}
+            onPress={() => handleMathabSelection("اسمــاعيلي")}
+            style={getMathabStyle("اسمــاعيلي")}
           >
             <Text style={styles.mathabText}>اسمــاعيلي</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleMathabSelection(4)}
-            style={getMathabStyle(4)}
+            onPress={() => handleMathabSelection("جعــفـري")}
+            style={getMathabStyle("جعــفـري")}
           >
             <Text style={styles.mathabText}>جعــفـري</Text>
           </TouchableOpacity>
@@ -174,22 +217,22 @@ const GeneralQ = ({ navigation }) => {
       <View style={{ flex: 1, backgroundColor: "white", padding: 30 }}>
         <View style={styles.educationLevelButtons}>
           <TouchableOpacity
-            onPress={() => handleFamily(1)}
-            style={getFamilyStyle(1)}
+            onPress={() => handleFamily("أنتمي لعائلة قبيلية")}
+            style={getFamilyStyle("أنتمي لعائلة قبيلية")}
           >
             <Text style={styles.mathabText}>أنتمي لعائلة قبيلية</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleFamily(2)}
-            style={getFamilyStyle(2)}
+            onPress={() => handleFamily("أنتمي لعائلة غير قبيلية")}
+            style={getFamilyStyle("أنتمي لعائلة غير قبيلية")}
           >
             <Text style={styles.mathabText}>أنتمي لعائلة غير قبيلية</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleFamily(3)}
-            style={getFamilyStyle(3)}
+            onPress={() => handleFamily("أفضل أن لا أجيب")}
+            style={getFamilyStyle("أفضل أن لا أجيب")}
           >
             <Text style={styles.mathabText}>أفضل أن لا أجيب</Text>
           </TouchableOpacity>
@@ -229,10 +272,10 @@ const GeneralQ = ({ navigation }) => {
       inputPlaceholder: "---",
       value: userBirthday
         ? userBirthday.toLocaleDateString("ar-EG", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
         : "",
       handleChange: showDatePicker,
     },
@@ -241,6 +284,16 @@ const GeneralQ = ({ navigation }) => {
       inputPlaceholder: "اختر الدولة...",
       value: selectedCountry,
       handleChange: handleSelectCountry,
+    }, {
+      question: "* البلد",
+      inputPlaceholder: "اختر البلد...",
+      value: selectedCountryName,
+      handleChange: handleSelectCountryName,
+    }, {
+      question: "* المدينة",
+      inputPlaceholder: "اختر المدينة...",
+      value: selectedCity,
+      handleChange: handleSelectCity,
     },
     {
       question: "مذهبـــي *",
@@ -273,7 +326,7 @@ const GeneralQ = ({ navigation }) => {
           />
         </View>
         {/* Display Current Step / Total Steps */}
-        <Text style={styles.stepText}>{`${currentStep}/19`}</Text>
+        <Text style={styles.stepText}>{`${currentStep}/21`}</Text>
 
         <View style={styles.circularButtonsContainer}>
           <TouchableOpacity
@@ -378,10 +431,65 @@ const GeneralQ = ({ navigation }) => {
               />
             </View>
           )}
+          {currentStep === 5 && currentStepData && (
+            <View>
+              <RNPickerSelect
+                onValueChange={(value,id) => { handleSelectCountryName(value,id) }}
+                items={customCountries.map((country) => ({
+                  label: country.name_ar,
+                  value: country.name_ar,
+                }))}
+                value={selectedCountryName ? selectedCountryName.name_ar : null}
+                placeholder={{
+                  label: "اختر البلد...",
+                  value: null,
+                }}
+                placeholderTextColor="#9B9B9B" // Set the color for the placeholder text
+                style={{
+                  inputIOS: {
+                    textAlign: "center",
+                    color: "black", // Set the color for the selected item text
+                  },
+                  inputAndroid: {
+                    textAlign: "center",
+                    color: "black", // Set the color for the selected item text
+                  },
+                }}
+              />
+            </View>
+          )}
 
-          {currentStep === 5 && <MathabScreen />}
+          {currentStep === 6 && currentStepData && (
+            <View>
+              <RNPickerSelect
+                onValueChange={(value) => handleSelectCity(value)}
+                items={city_country.map((country) => ({
+                  label: country.name_ar,
+                  value: country.name_ar,
+                }))}
+                value={selectedCity ? selectedCity.name_ar : null}
+                placeholder={{
+                  label: "اختر المدينة...",
+                  value: null,
+                }}
+                placeholderTextColor="#9B9B9B" // Set the color for the placeholder text
+                style={{
+                  inputIOS: {
+                    textAlign: "center",
+                    color: "black", // Set the color for the selected item text
+                  },
+                  inputAndroid: {
+                    textAlign: "center",
+                    color: "black", // Set the color for the selected item text
+                  },
+                }}
+              />
+            </View>
+          )}
 
-          {currentStep === 6 && <FamilyScreen />}
+          {currentStep === 7 && <MathabScreen />}
+
+          {currentStep === 8 && <FamilyScreen />}
 
           <DateTimePickerModal
             isVisible={isDatePickerVisible}

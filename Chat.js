@@ -20,14 +20,27 @@ import {
 import React, { useEffect, useState } from 'react'
 import { db } from "./Firebase-config";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 const Chat = ({route}) => {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const [isSent, setIsSent] = useState(true); // Flag to determine if a message is sent or received
-    const userId = route.params?.userId // Default to 7 if not provided
-    const messagesRef = collection(db, "messages");
+    const navigation = useNavigation();
+    const userId = route.params?.userId
+    const name = route.params?.name
+    const image = route.params?.image
 
+    const participant = route.params?.participant
+    const messagesArray = useSelector((state) => state.messages);
+        const messagesRef = collection(db, "messages");
+const x=messagesArray.messagesArray.filter((item)=>item.data().senderId==userId)
+console.log("x",x);
+  // console.log("userId",userId);
+  // console.log("item",item.data().senderId);
 
     useEffect(() => {
       const queryMessages = query(
@@ -39,21 +52,26 @@ const Chat = ({route}) => {
         snapshot.forEach((doc) => {
           messages.push({ ...doc.data(), id: doc.id });
         });
-        console.log('messages',messages);
       setMessages(messages);
       });
     
       return () => unsuscribe();
     
+
+
+
     }, [])
 
     const handleSend =async () => {
       const token = await AsyncStorage.getItem("login");
+
         await addDoc(messagesRef, {
             text: message,
             createdAt: serverTimestamp(),
             user: JSON.parse(token).id,
-            senderId:userId
+            senderId:userId,
+            img:'',
+            name:name
           });
       
       
@@ -66,6 +84,19 @@ const Chat = ({route}) => {
     
     return (
         <View style={styles.container}>
+                  <View style={styles.circularButtonsContainer}>
+                <TouchableOpacity
+                    style={styles.circularButton}
+                    onPress={() => {
+                        navigation.goBack();
+                    }}
+                >
+                    <Ionicons name="arrow-back" size={24} color="#9B9B9B" />
+                </TouchableOpacity>
+   
+
+            </View>
+
           <FlatList
             data={messages}
             keyExtractor={(item, index) => index.toString()}
@@ -76,7 +107,6 @@ const Chat = ({route}) => {
                   item.isSent ? styles.sentMessage : styles.receivedMessage,
                 ]}
               >
-    
                 <Text style={styles.messageText}>{item.text}</Text>
               </View>
             )}
@@ -154,6 +184,26 @@ const Chat = ({route}) => {
       messageText: {
         textAlign: "right", // Right-to-left text alignment
       },
+      circularButtonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 30,
+        marginBottom:10 ,
+        marginHorizontal: 20,
+        width:"100%",
+        paddingHorizontal:22
+    },
+    circularButton: {
+        width: 30,
+        height: 30,
+        borderRadius: 15,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 5,
+        borderWidth: 2,
+        borderColor: '#F2F2F2',
+    },
     });
     
 

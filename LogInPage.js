@@ -6,12 +6,15 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
+  Image,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
+import { useDispatch } from "react-redux";
+import { userMethod } from "./Redux/user";
 
 
 const ProfileScreen = () => {
@@ -21,8 +24,7 @@ const ProfileScreen = () => {
   const [passwordError, setPasswordError] = useState("");
   const navigation = useNavigation();
   const [selectedImage, setSelectedImage] = useState(null);
-
-console.log("username",password);
+const dispatch=useDispatch()
   useEffect(() => {
     (async () => {
       const { status } =
@@ -50,10 +52,12 @@ console.log("username",password);
     });
 
     if (!result.cancelled) {
-      setSelectedImage(result.uri);
+      setSelectedImage(result.assets[0].uri);
     }
   };
-
+  const handleForgotPassword = () => {
+    navigation.navigate("ForgotPassword"); // Navigate to the Forgot Password screen
+  };
   const handleDownloadImage = () => {
     setShowOptions(true);
   };
@@ -69,20 +73,18 @@ console.log("username",password);
     try {
       const response = await axios.post(`https://marriage-application.onrender.com/login`,
         {
-          "name" :username, // email of the user
-      
-          "password": password // password of the user
-      
+          "name" :username, 
+          "password": password,
+     
       
       });
       if (response.status === 200) {
-        //  AsyncStorage.setItem('login', response.data);
-        AsyncStorage.setItem('login', JSON.stringify(response.data));
+        dispatch(userMethod(response.data))
         navigation.navigate('MainHome')
 
       }
     } catch (error) {
-      console.error('Error fetching data: ', error);
+      console.error('Error fetching data: ', error.data);
     }
 
     // navigation.navigate("", { imageUri: null }); //هنا حطو هوم سكرين
@@ -124,20 +126,16 @@ console.log("username",password);
       >
         <AntDesign name="arrowright" size={24} color="#ECB7B7" />
       </TouchableOpacity>
-      {selectedImage && <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200,backgroundColor:'red' }} />}
-<Text>jfkkjdf</Text>
 
-      <TouchableOpacity onPress={openImagePickerAsync}>
-
+      <TouchableOpacity onPress={handleDownloadImage}>
         <View style={styles.imageContainer}>
           {/* Profile picture content removed */}
-
         </View>
       </TouchableOpacity>
 
       {/* White Box Container */}
       <View style={styles.whiteBox}>
-        {<Text style={styles.title}> تسجيل دخول</Text>}
+        <Text style={styles.title}> تسجيل دخول</Text>
         <TextInput
           style={styles.input}
           placeholder="اسم المستخدم"
@@ -167,6 +165,11 @@ console.log("username",password);
             {"\n"}- Contain at least one symbol
           </Text>
         )}
+
+        {/* Forgot Password Link */}
+        <TouchableOpacity onPress={handleForgotPassword}>
+          <Text style={styles.forgotPassword}>نسيت كلمة المرور؟</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Image Picker Modal */}
@@ -199,35 +202,33 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "white", // Background color for better visualization
   },
-  // داخل الستايل
   welcomeText: {
     fontSize: 30,
     marginBottom: -70,
     color: "black",
-    textAlign: "right", // تحديد محاذاة النص إلى اليمين
-    width: "100%", // جعل النص يحتل العرض بالكامل
+    textAlign: "right",
+    width: "100%",
   },
-
   whiteBox: {
-    width: "90%", // Adjust the width of the box
+    width: "90%",
     backgroundColor: "#9fadbd",
     borderRadius: 25,
     padding: 20,
-    position: "absolute", // Position the box absolutely
-    top: 340, // Align the box at the bottom of the screen
-    marginBottom: "500%", // Take half of the page's height
+    position: "absolute",
+    top: 340,
+    marginBottom: "500%",
     alignItems: "center",
   },
   input: {
     width: "80%",
     height: 55,
     borderWidth: 1,
-    borderColor: "#b2b8bf", // Change border color to match the white box
+    borderColor: "#b2b8bf",
     borderRadius: 10,
     marginVertical: 10,
     paddingHorizontal: 15,
-    backgroundColor: "#b2b8bf", // Add background color to the input
-    alignSelf: "center", // Center the input within the white box
+    backgroundColor: "#b2b8bf",
+    alignSelf: "center",
   },
   imageContainer: {
     position: "relative",
@@ -281,11 +282,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     marginBottom: 40,
-    color: "black", // Change color to match the white box background
-    textAlign: "right", // Align the text to the right
-    width: "100%", // Center the title
+    color: "black",
+    textAlign: "right",
+    width: "100%",
   },
-
   topLeft: {
     top: 40,
     left: 20,
@@ -311,6 +311,12 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderWidth: 2,
     borderColor: "#F2F2F2",
+  },
+  // New style for the "Forgot Password" link
+  forgotPassword: {
+    color: "#56a5ec",
+    textAlign: "center",
+    marginTop: 10,
   },
 });
 

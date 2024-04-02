@@ -12,9 +12,29 @@ import { Ionicons } from "@expo/vector-icons";
 import ProgressBar from "react-native-progress/Bar";
 
 const GirlsQ = ({ navigation, route }) => {
-  const initialStep = route.params?.currentStep || 7; // Default to 7 if not provided
-  const totalSteps = route.params?.totalSteps || 19; // Default to 18 if not provided
+  const initialStep = route.params?.currentStep || 9; // Default to 7 if not provided
+  const totalSteps = route.params?.totalSteps || 21; // Default to 18 if not provided
+  const userName = route.params?.userName
+  const selectedGender = route.params?.selectedGender
+  const userBirthday = route.params?.userBirthday
+  const selectedCountry = route.params?.selectedCountry
+  const selectedMathab = route.params?.selectedMathab
+  const selectedFamily = route.params?.selectedFamily
+  const selectedCity = route.params?.selectedCity
+  const selectedCountryName = route.params?.selectedCountryName
+  const phoneNumber = route.params?.phoneNumber
 
+  console.log(
+    phoneNumber,
+    userName,
+    selectedGender,
+    userBirthday,
+    selectedCountry,
+    selectedCountryName,
+    selectedCity,
+    selectedMathab,
+    selectedFamily
+  );
   const [selectedMe, setSelectedMe] = useState(null);
   const [selectedEdu, setSelectedEdu] = useState(null);
   const [selectedSocity, setSelectedSocity] = useState(null);
@@ -60,7 +80,7 @@ const GirlsQ = ({ navigation, route }) => {
   };
 
   const handlePreviousClick = () => {
-    if (currentStep > 7) {
+    if (currentStep > 9) {
       setCurrentStep((prevStep) => prevStep - 1);
     } else {
       navigation.goBack(); // or navigation.navigate('MyName'); if you specifically want to navigate back to MyName
@@ -71,7 +91,33 @@ const GirlsQ = ({ navigation, route }) => {
     if (currentStep < 18) {
       setCurrentStep((prevStep) => prevStep + 1);
     } else {
-      navigation.navigate("Daily");
+      navigation.navigate("Daily", {
+        phoneNumber:phoneNumber,
+        userName:userName,
+        selectedGender:selectedGender,
+        userBirthday:userBirthday,
+        selectedCountry:selectedCountry,
+        selectedCountryName:selectedCountryName,
+        selectedCity:selectedCity,
+        selectedMathab:selectedMathab,
+        selectedFamily:selectedFamily,
+        selectedMe:selectedMe,
+        selectedCurrent:selectedCurrent,
+        selectedMarr:selectedMarr,
+        selectedKids:selectedKids,
+        selectedHijab:selectedHijab,
+        selectedContact:selectedContact,
+        selectedPrayer:selectedPrayer,
+        selectedSmoke:selectedSmoke,
+        selectedColor:selectedColor,
+        weight:weight,
+        height:height,
+        selectedEdu:selectedEdu,
+        selectedSocity:selectedSocity
+
+
+
+      });
     }
   };
 
@@ -397,22 +443,22 @@ const GirlsQ = ({ navigation, route }) => {
       <View style={{ flex: 1, backgroundColor: "white", padding: 30 }}>
         <View style={styles.educationLevelButtons}>
           <TouchableOpacity
-            onPress={() => handleColor(1)}
-            style={getColorStyle(1)}
+            onPress={() => handleColor("بيضاء")}
+            style={getColorStyle("بيضاء")}
           >
             <Text style={styles.MeText}>بيضاء</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleColor(2)}
-            style={getColorStyle(2)}
+            onPress={() => handleColor("حنطية")}
+            style={getColorStyle("حنطية")}
           >
             <Text style={styles.MeText}>حنطية</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleColor(3)}
-            style={getColorStyle(3)}
+            onPress={() => handleColor("سمراء")}
+            style={getColorStyle("سمراء")}
           >
             <Text style={styles.MeText}>سمراء</Text>
           </TouchableOpacity>
@@ -426,22 +472,22 @@ const GirlsQ = ({ navigation, route }) => {
       <View style={{ flex: 1, backgroundColor: "white", padding: 30 }}>
         <View style={styles.educationLevelButtons}>
           <TouchableOpacity
-            onPress={() => handleContact(1)}
-            style={getContactStyle(1)}
+            onPress={() => handleContact("محادثة فقط")}
+            style={getContactStyle("محادثة فقط")}
           >
             <Text style={styles.MeText}>محادثة فقط</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleContact(2)}
-            style={getContactStyle(2)}
+            onPress={() => handleContact("محادثة وصوت")}
+            style={getContactStyle("محادثة وصوت")}
           >
             <Text style={styles.MeText}>محادثة وصوت</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleContact(3)}
-            style={getContactStyle(3)}
+            onPress={() => handleContact("محادثة وصوت وفيديو")}
+            style={getContactStyle("محادثة وصوت وفيديو")}
           >
             <Text style={styles.MeText}>محادثة وصوت وفيديو</Text>
           </TouchableOpacity>
@@ -455,36 +501,36 @@ const GirlsQ = ({ navigation, route }) => {
       <View style={{ flex: 1, backgroundColor: "white", padding: 30 }}>
         <View style={styles.educationLevelButtons}>
           <TouchableOpacity
-            onPress={() => handleHijab(1)}
-            style={getHijabStyle(1)}
+            onPress={() => handleHijab("منقبة")}
+            style={getHijabStyle("منقبة")}
           >
             <Text style={styles.MeText}>منقبة</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleHijab(2)}
-            style={getHijabStyle(2)}
+            onPress={() => handleHijab("محجبة")}
+            style={getHijabStyle("محجبة")}
           >
             <Text style={styles.MeText}>محجبة</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleHijab(3)}
-            style={getHijabStyle(3)}
+            onPress={() => handleHijab("غير محجبة")}
+            style={getHijabStyle("غير محجبة")}
           >
             <Text style={styles.MeText}>غير محجبة</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleHijab(4)}
-            style={getHijabStyle(4)}
+            onPress={() => handleHijab("طرحة")}
+            style={getHijabStyle("طرحة")}
           >
             <Text style={styles.MeText}>طرحة</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleHijab(5)}
-            style={getHijabStyle(5)}
+            onPress={() => handleHijab("مرنة")}
+            style={getHijabStyle("مرنة")}
           >
             <Text style={styles.MeText}>مرنة</Text>
           </TouchableOpacity>
@@ -498,22 +544,22 @@ const GirlsQ = ({ navigation, route }) => {
       <View style={{ flex: 1, backgroundColor: "white", padding: 30 }}>
         <View style={styles.educationLevelButtons}>
           <TouchableOpacity
-            onPress={() => handleMeSelection(1)}
-            style={getMeStyle(1)}
+            onPress={() => handleMeSelection("في صحة جيدة")}
+            style={getMeStyle("في صحة جيدة")}
           >
             <Text style={styles.MeText}>في صحة جيدة</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleMeSelection(2)}
-            style={getMeStyle(2)}
+            onPress={() => handleMeSelection("أعاني من مرض مزمن")}
+            style={getMeStyle("أعاني من مرض مزمن")}
           >
             <Text style={styles.MeText}>أعاني من مرض مزمن</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleMeSelection(3)}
-            style={getMeStyle(3)}
+            onPress={() => handleMeSelection("عقيمة")}
+            style={getMeStyle("عقيمة")}
           >
             <Text style={styles.MeText}>عقيمة</Text>
           </TouchableOpacity>
@@ -526,31 +572,31 @@ const GirlsQ = ({ navigation, route }) => {
     return (
       <View style={{ flex: 1, backgroundColor: "white", padding: 30 }}>
         <View style={styles.educationLevelButtons}>
-          <TouchableOpacity onPress={() => handleEdu(1)} style={getEduStyle(1)}>
+          <TouchableOpacity onPress={() => handleEdu("أقل من الثانوية")} style={getEduStyle("أقل من الثانوية")}>
             <Text style={styles.MeText}>أقل من الثانوية</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleEdu(2)} style={getEduStyle(2)}>
+          <TouchableOpacity onPress={() => handleEdu("المدرسة الثانوية")} style={getEduStyle("المدرسة الثانوية")}>
             <Text style={styles.MeText}>المدرسة الثانوية</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleEdu(3)} style={getEduStyle(3)}>
+          <TouchableOpacity onPress={() => handleEdu("بكالريوس")} style={getEduStyle("بكالريوس")}>
             <Text style={styles.MeText}>بكالريوس</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleEdu(4)} style={getEduStyle(4)}>
+          <TouchableOpacity onPress={() => handleEdu("ماجستير")} style={getEduStyle("ماجستير")}>
             <Text style={styles.MeText}>ماجستير</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleEdu(5)} style={getEduStyle(5)}>
+          <TouchableOpacity onPress={() => handleEdu("الدبلوم")} style={getEduStyle("الدبلوم")}>
             <Text style={styles.MeText}>الدبلوم</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleEdu(6)} style={getEduStyle(6)}>
+          <TouchableOpacity onPress={() => handleEdu("الدبلوم العالي")} style={getEduStyle("الدبلوم العالي")}>
             <Text style={styles.MeText}>الدبلوم العالي</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleEdu(7)} style={getEduStyle(7)}>
+          <TouchableOpacity onPress={() => handleEdu("الدكتوراة")} style={getEduStyle("الدكتوراة")}>
             <Text style={styles.MeText}>الدكتوراة </Text>
           </TouchableOpacity>
         </View>
@@ -563,29 +609,29 @@ const GirlsQ = ({ navigation, route }) => {
       <View style={{ flex: 1, backgroundColor: "white", padding: 30 }}>
         <View style={styles.educationLevelButtons}>
           <TouchableOpacity
-            onPress={() => handleKids(1)}
-            style={getKidsStyle(1)}
+            onPress={() => handleSoc("عازبة")}
+            style={getSStyle("عازبة")}
           >
             <Text style={styles.MeText}>عازبة</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleSoc(2)} style={getSStyle(2)}>
+          <TouchableOpacity onPress={() => handleSoc("مطلقة من غير أطفال")} style={getSStyle("مطلقة من غير أطفال")}>
             <Text style={styles.MeText}>مطلقة من غير أطفال</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleSoc(3)} style={getSStyle(3)}>
+          <TouchableOpacity onPress={() => handleSoc("مطلقة مع أطفال")} style={getSStyle("مطلقة مع أطفال")}>
             <Text style={styles.MeText}>مطلقة مع أطفال</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleSoc(4)} style={getSStyle(4)}>
+          <TouchableOpacity onPress={() => handleSoc("أرملة بدون أطفال")} style={getSStyle("أرملة بدون أطفال")}>
             <Text style={styles.MeText}>أرملة بدون أطفال</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleSoc(5)} style={getSStyle(5)}>
+          <TouchableOpacity onPress={() => handleSoc("أرملة مع أطفال")} style={getSStyle("أرملة مع أطفال")}>
             <Text style={styles.MeText}>أرملة مع أطفال</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleSoc(6)} style={getSStyle(6)}>
+          <TouchableOpacity onPress={() => handleSoc("متزوجة")} style={getSStyle("متزوجة")}>
             <Text style={styles.MeText}>متزوجة</Text>
           </TouchableOpacity>
         </View>
@@ -598,28 +644,28 @@ const GirlsQ = ({ navigation, route }) => {
       <View style={{ flex: 1, backgroundColor: "white", padding: 30 }}>
         <View style={styles.educationLevelButtons}>
           <TouchableOpacity
-            onPress={() => handleCurrent(1)}
-            style={getCStyle(1)}
+            onPress={() => handleCurrent("طالبة")}
+            style={getCStyle("طالبة")}
           >
             <Text style={styles.MeText}>طالبة</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleCurrent(2)}
-            style={getCStyle(2)}
+            onPress={() => handleCurrent("عاملة")}
+            style={getCStyle("عاملة")}
           >
             <Text style={styles.MeText}>عاملة</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleCurrent(3)}
-            style={getCStyle(3)}
+            onPress={() => handleCurrent("عاطلة عن العمل")}
+            style={getCStyle("عاطلة عن العمل")}
           >
             <Text style={styles.MeText}>عاطلة عن العمل</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleCurrent(4)}
-            style={getCStyle(4)}
+            onPress={() => handleCurrent("افضل أن لا أجيب")}
+            style={getCStyle("افضل أن لا أجيب")}
           >
             <Text style={styles.MeText}>افضل أن لا أجيب</Text>
           </TouchableOpacity>
@@ -633,22 +679,22 @@ const GirlsQ = ({ navigation, route }) => {
       <View style={{ flex: 1, backgroundColor: "white", padding: 30 }}>
         <View style={styles.educationLevelButtons}>
           <TouchableOpacity
-            onPress={() => handleMarr(1)}
-            style={getMarrStyle(1)}
+            onPress={() => handleMarr("بأسرع وقت ممكن")}
+            style={getMarrStyle("بأسرع وقت ممكن")}
           >
             <Text style={styles.MeText}>بأسرع وقت ممكن</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleMarr(2)}
-            style={getMarrStyle(2)}
+            onPress={() => handleMarr("خلال سنتين")}
+            style={getMarrStyle("خلال سنتين")}
           >
             <Text style={styles.MeText}>خلال سنتين</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleMarr(3)}
-            style={getMarrStyle(3)}
+            onPress={() => handleMarr("لست في عجلة")}
+            style={getMarrStyle("لست في عجلة")}
           >
             <Text style={styles.MeText}>لست في عجلة</Text>
           </TouchableOpacity>
@@ -661,22 +707,22 @@ const GirlsQ = ({ navigation, route }) => {
       <View style={{ flex: 1, backgroundColor: "white", padding: 30 }}>
         <View style={styles.educationLevelButtons}>
           <TouchableOpacity
-            onPress={() => handleKids(1)}
-            style={getKidsStyle(1)}
+            onPress={() => handleKids("بأسرع وقت ممكن")}
+            style={getKidsStyle("بأسرع وقت ممكن")}
           >
             <Text style={styles.MeText}>بأسرع وقت ممكن</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleKids(2)}
-            style={getKidsStyle(2)}
+            onPress={() => handleKids("مع مرور الوقت")}
+            style={getKidsStyle("مع مرور الوقت")}
           >
             <Text style={styles.MeText}>مع مرور الوقت</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleKids(3)}
-            style={getKidsStyle(3)}
+            onPress={() => handleKids("لا أريد أطفال أبدًا")}
+            style={getKidsStyle("لا أريد أطفال أبدًا")}
           >
             <Text style={styles.MeText}>لا أريد أطفال أبدًا</Text>
           </TouchableOpacity>
@@ -690,22 +736,22 @@ const GirlsQ = ({ navigation, route }) => {
       <View style={{ flex: 1, backgroundColor: "white", padding: 30 }}>
         <View style={styles.educationLevelButtons}>
           <TouchableOpacity
-            onPress={() => handlePrayer(1)}
-            style={getPrayerStyle(1)}
+            onPress={() => handlePrayer("ملتزمه")}
+            style={getPrayerStyle("ملتزمه")}
           >
             <Text style={styles.MeText}>ملتزمه</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handlePrayer(2)}
-            style={getPrayerStyle(2)}
+            onPress={() => handlePrayer("مرنه")}
+            style={getPrayerStyle("مرنه")}
           >
             <Text style={styles.MeText}>مرنه</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handlePrayer(3)}
-            style={getPrayerStyle(3)}
+            onPress={() => handlePrayer("لا أهتم")}
+            style={getPrayerStyle("لا أهتم")}
           >
             <Text style={styles.MeText}>لا أهتم</Text>
           </TouchableOpacity>
@@ -719,28 +765,28 @@ const GirlsQ = ({ navigation, route }) => {
       <View style={{ flex: 1, backgroundColor: "white", padding: 30 }}>
         <View style={styles.educationLevelButtons}>
           <TouchableOpacity
-            onPress={() => handleSmoke(1)}
-            style={getSmokeStyle(1)}
+            onPress={() => handleSmoke("لا")}
+            style={getSmokeStyle("لا")}
           >
             <Text style={styles.MeText}>لا</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleSmoke(2)}
-            style={getSmokeStyle(2)}
+            onPress={() => handleSmoke("أدخن فقط")}
+            style={getSmokeStyle("أدخن فقط")}
           >
             <Text style={styles.MeText}>أدخن فقط</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handleSmoke(3)}
-            style={getSmokeStyle(3)}
+            onPress={() => handleSmoke("أشرب فقط")}
+            style={getSmokeStyle("أشرب فقط")}
           >
             <Text style={styles.MeText}>أشرب فقط</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleSmoke(4)}
-            style={getSmokeStyle(4)}
+            onPress={() => handleSmoke("نعم")}
+            style={getSmokeStyle("نعم")}
           >
             <Text style={styles.MeText}>نعم</Text>
           </TouchableOpacity>

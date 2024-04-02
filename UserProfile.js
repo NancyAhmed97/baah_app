@@ -67,7 +67,12 @@ const UserProfile = ({ route }) => {
         console.error("Error in handleChooseImage: ", error);
       });
   };
-
+  const [images, setImages] = useState([
+    require("./assets/1.png"),
+    require("./assets/2.png"),
+    require("./assets/3.png"),
+    require("./assets/4.png"),
+  ]);
   // const images = user.photoGallery || []; // Use user's photoGallery or an empty array if undefined
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -86,7 +91,7 @@ const UserProfile = ({ route }) => {
             <View style={styles.profileRow}>
               <TouchableOpacity onPress={handleChooseImage}>
                 <Image
-                  source={selectedImage || require("./assets/pp.png")}
+                  source={{ uri: profile.image } || require("./assets/pp.png")}
                   style={styles.profileImageLarge}
                 />
               </TouchableOpacity>
@@ -98,18 +103,24 @@ const UserProfile = ({ route }) => {
                 <Text style={styles.profileDetails}>اخر تواجد قبل {profile.active_status && profile.active_status.substring(12)} دقائق</Text>
               </View>
             </View>
+
           </View>
+
           <View style={{ marginTop: 10 }}>
             <View
               style={{ borderBottomWidth: 1, borderBottomColor: "#cccccc" }}
             />
+
             <View style={{ marginTop: 10 }}></View>
+            <Text>{profile.pio}</Text>
+
           </View>
         </View>
 
         <View style={styles.subscriptionContainer}>
           <Text style={styles.subscriptionText}>الباقة الحالية</Text>
         </View>
+        {profile.subscription&&
         <View style={styles.subscriptionOptionsContainer}>
           <TouchableOpacity style={styles.subscriptionOption}>
             <Text style={styles.subscriptionOptionText}>
@@ -117,45 +128,74 @@ const UserProfile = ({ route }) => {
             </Text>
           </TouchableOpacity>
         </View>
+}
         <View style={styles.impContainer}>
           <Text style={styles.additionalTitleText}>أساسيات</Text>
           <View style={styles.groupParent}>
+        
+            {profile.marital_status_woman_man &&
+
             <TouchableOpacity style={styles.button}>
               <View style={styles.rectangle} />
               <Text style={styles.buttonText}>❤️ {profile.marital_status_woman_man}</Text>
             </TouchableOpacity>
+          }
+            {profile.religious_denomination &&
+
             <TouchableOpacity style={styles.button}>
               <View style={styles.rectangle} />
               <Text style={styles.buttonText}>🌙 {profile.religious_denomination}</Text>
             </TouchableOpacity>
+          }
+            {profile.skin_woman_man &&
+
             <TouchableOpacity style={styles.button}>
               <View style={styles.rectangle} />
               <Text style={styles.buttonText}>{profile.skin_woman_man}</Text>
             </TouchableOpacity>
+          }
+            {profile.height_woman &&
+
             <TouchableOpacity style={styles.button}>
               <View style={styles.rectangle} />
               <Text style={styles.buttonText}>{profile.height_woman}cm</Text>
             </TouchableOpacity>
+          }
+            {profile.weight_woman &&
+
             <TouchableOpacity style={styles.button}>
               <View style={styles.rectangle} />
               <Text style={styles.buttonText}>{profile.weight_woman}kg</Text>
             </TouchableOpacity>
+          }
+            {profile.smoking_drinking_woman_man &&
+
+
             <TouchableOpacity style={styles.button}>
               <View style={styles.rectangle} />
               <Text style={styles.buttonText}>🚬 {profile.smoking_drinking_woman_man}</Text>
             </TouchableOpacity>
+          }
+            {profile.work_status_woman_man &&
+
             <TouchableOpacity style={styles.button}>
               <View style={styles.rectangle} />
               <Text style={styles.buttonText}> {profile.work_status_woman_man}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
-              <View style={styles.rectangle} />
-              <Text style={[styles.buttonText, { fontSize: 10 }]}> {profile.need_kids_woman_man}👧</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
-              <View style={styles.rectangle} />
-              <Text style={styles.buttonText}>{profile.educational_level_woman_man}</Text>
-            </TouchableOpacity>
+            }
+            {profile.need_kids_woman_man &&
+
+              <TouchableOpacity style={styles.button}>
+                <View style={styles.rectangle} />
+                <Text style={[styles.buttonText, { fontSize: 10 }]}> {profile.need_kids_woman_man}👧</Text>
+              </TouchableOpacity>
+            }
+            {profile.educational_level_woman_man &&
+              <TouchableOpacity style={styles.button}>
+                <View style={styles.rectangle} />
+                <Text style={styles.buttonText}>{profile.educational_level_woman_man}</Text>
+              </TouchableOpacity>
+            }
           </View>
         </View>
         <View style={styles.habitsContainer}>
@@ -173,8 +213,8 @@ const UserProfile = ({ route }) => {
 
         <View style={styles.galleryContainer}>
           <Text style={styles.galleryTitle}>صوري</Text>
-          {/* <View style={styles.galleryImagesContainer}>
-            {images&&images.map((image, index) => (
+          <View style={styles.galleryImagesContainer}>
+            {profile.image_array ? profile.image_array.map((image, index) => (
               <TouchableOpacity
                 key={index}
                 onPress={() => openImage(image)}
@@ -182,8 +222,20 @@ const UserProfile = ({ route }) => {
               >
                 <Image source={image} style={styles.galleryImage} />
               </TouchableOpacity>
-            ))}
-          </View> */}
+            ))
+
+
+              :
+
+              <Text
+                style={{
+                  marginVertical: 22,
+                  textAlign: 'center',
+                  width: "100%"
+                }}
+              >لا توجد صور</Text>
+            }
+          </View>
         </View>
 
         <Modal

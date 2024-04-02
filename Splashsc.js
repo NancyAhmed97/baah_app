@@ -2,17 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, SafeAreaView, View, Image, } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
 
 
 const Splashsc = () => {
 	const [data, setData] = useState('')
+	const userinfo = useSelector((state) => state);
+
 	useEffect(() => {
 		const checkLogin = async () => {
 			try {
-				console.log("login",await AsyncStorage.getItem("login"));
 
 				const token = await AsyncStorage.getItem("login");
-				if (token) {
+				if (userinfo.user.userArray.id) {
 					const timer = setTimeout(() => {
 						navigation.replace('MainHome');
 					}, 3000);
@@ -20,7 +22,7 @@ const Splashsc = () => {
 
 				} else {
 					const timer = setTimeout(() => {
-						navigation.replace('SplashTwo');
+						navigation.replace('SignInPage');
 					}, 3000);
 					return () => clearTimeout(timer);
 

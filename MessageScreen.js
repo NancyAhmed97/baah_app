@@ -1,66 +1,105 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
-  TextInput,
-  Button,
   FlatList,
   Text,
   StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
 } from "react-native";
-import { Platform } from 'react-native';
-const Chatroom = ({ route }) => {
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
-  const [isSent, setIsSent] = useState(true); // Flag to determine if a message is sent or received
-  const userId = route.params?.userId // Default to 7 if not provided
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "./Firebase-config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSelector } from "react-redux";
+
+const Inbox = ({ navigation }) => {
+  const [data, setData] = useState([]);
+  const messages = useSelector((state) => state);
 
 
+  // const [messages, setMessages] = useState([
+  //   {
+  //     id: 1,
+  //     sender: "محمد سعيد",
+  //     content: "ممكن نتعرف؟",
+  //   },
+  //   {
+  //     id: 2,
+  //     sender: "ياسر علي",
+  //     content: "مرحبًا، ما هي خططك لعطلة نهاية الأسبوع؟",
+  //   },
+  //   {
+  //     id: 3,
+  //     sender: "سليمان صالح",
+  //     content: "كيف حالك",
+  //   },
+  //   {
+  //     id: 4,
+  //     sender: "حمد عيسى",
+  //     content: "هل ترغبين في الانضمام إلى العشاء الليلة؟",
+  //   },
+  // ]);
 
 
-  const handleSend = () => {
-    if (message.trim() !== "") {
-      setMessages([...messages, { text: message, isSent }]);
-      setMessage("");
-      setIsSent(!isSent); // Toggle the flag for the next message
-    }
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const token = await AsyncStorage.getItem("login");
+  //     const querySnapshot = await getDocs(collection(db, "messages"));
+  //     const x = querySnapshot.docs.filter((item) => item.data().user === JSON.parse(token).id)
+  //     setData(x);
+
+
+  //   };
+
+  //   fetchData();
+
+  // }, [])
+  // Function to navigate to message details
+  const handleMessagePress = (message) => {
+    navigation.navigate("chat", { participant: message.data().senderId });
   };
 
+  // Render each message item
+  const renderMessageItem = ({ item }) => {
+    let milliseconds = item.data().createdAt.seconds * 1000 + Math.round(item.data().createdAt.nanoseconds / 1e6);
+
+    const date = new Date(milliseconds);
+
+
+
+    return (
+      <TouchableOpacity
+        onPress={() => handleMessagePress(item)}
+        style={styles.messageItem}
+      >
+        <Text
+          style={{
+            textAlign: 'right'
+          }}
+        >
+
+
+          {JSON.stringify(date).substring(1, JSON.stringify(date).length - 15)}
+        </Text>
+
+        <View style={styles.messageContent}>
+          <Text style={styles.sender}>{item.sender}</Text>
+          <Text style={styles.content}>{item.data().text}</Text>
+        </View>
+        <Image source={require("./assets/pp.png")} style={styles.profileImage} />
+      </TouchableOpacity>
+    )
+  }
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={messages}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <View
-            style={[
-              styles.messageContainer,
-              item.isSent ? styles.sentMessage : styles.receivedMessage,
-            ]}
-          >
-
-            <Text style={styles.messageText}>{item.text}</Text>
-          </View>
-        )}
-        contentContainerStyle={styles.chatContainer}
+        data={messages.messages.messagesArray} // Reverse the order of messages
+        keyExtractor={(item) => item.data().user.toString()}
+        renderItem={renderMessageItem}
+        contentContainerStyle={styles.flatListContent}
       />
-
-      <View style={styles.textInputContainer}>
-
-        <TextInput
-          style={styles.textInput}
-          placeholder="اكتب رسالتك"
-          value={message}
-          onChangeText={(text) => setMessage(text)}
-        />
-
-        <Button
-          title="إرسال"
-          onPress={handleSend}
-          color="#007BFF"
-          style={styles.sendButton}
-        />
-      </View>
     </View>
   );
 };
@@ -68,54 +107,39 @@ const Chatroom = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-  chatContainer: {
-    flex: 1,
-  },
-  textInputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
     backgroundColor: "#fff",
   },
-  textInput: {
-    flex: 1,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    paddingHorizontal: 10,
-    marginLeft: 5,
-    textAlign: "right", // Align text to the right for Arabic input
+  flatListContent: {
+    paddingTop: 10, // Add padding to avoid the first message being cut off
   },
-  sendButton: {
-    backgroundColor: "#ECB7B7",
-    borderRadius: 20,
-    paddingHorizontal: 15,
+  messageItem: {
+    flexDirection: "row",
+    alignItems: "flex-start",
     paddingVertical: 10,
-    marginLeft: 5,
+    paddingHorizontal: 15,
   },
-  messageContainer: {
-    padding: 8,
-    borderRadius: 5,
-    marginBottom: 10,
-    maxWidth: "70%", // Adjust the width as needed
-    alignSelf: "flex-start",
+  profileImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 20,
+    marginLeft: 10, // Adjusted to display on the right side
   },
-  sentMessage: {
-    backgroundColor: "#ECB7B7",
-    alignSelf: "flex-end",
+  messageContent: {
+    flex: 1,
+    marginLeft: 10,
   },
-  receivedMessage: {
-    backgroundColor: "#E5E5E5",
-    alignSelf: "flex-start",
+  sender: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#4B5867", // Changed color
+    textAlign: "right", // Align text to right
   },
-  messageText: {
-    textAlign: "right", // Right-to-left text alignment
+  content: {
+    fontSize: 14,
+    color: "#333",
+    textAlign: "right", // Align text to right
+    marginTop: 5,
   },
 });
 
-export default Chatroom;
+export default Inbox;

@@ -3,20 +3,76 @@ import { View, StyleSheet, ImageBackground, Text, TouchableOpacity, Image, TextI
 import Slider from '@react-native-community/slider';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
-const Visibility = () => {
+const Visibility = ({route}) => {
   const [value, setValue] = useState(0);
   const [imageUri, setImageUri] = useState('');
   const navigation = useNavigation();
-  const route = useRoute();
+  const selectedGender = route.params?.selectedGender
+  const selectedCountry = route.params?.selectedCountry
+  const selectedMathab = route.params?.selectedMathab
+  const selectedFamily = route.params?.selectedFamily
+  const userName = route.params?.userName
+  const selectedMe = route.params?.userName
+  const selectedEdu = route.params?.selectedEdu
+  const selectedSocity = route.params?.selectedSocity
+  const weight = route.params?.weight
+  const height = route.params?.height
+  const selectedColor = route.params?.selectedColor
+  const selectedSmoke = route.params?.selectedSmoke
+  const selectedPrayer = route.params?.selectedPrayer
+  const selectedContact = route.params?.selectedContact
+  const selectedHijab = route.params?.selectedHijab
+  const selectedCurrent = route.params?.selectedCurrent
+  const selectedMarr = route.params?.selectedMarr
+  const selectedKids = route.params?.selectedKids
+  const selectedCountryName = route.params?.selectedCountryName
+  const selectedCity = route.params?.selectedCity
+  const phoneNumber = route.params?.phoneNumber
+  const userBirthday = route.params?.userBirthday
+  const habits = route.params?.habits
+  const username = route.params?.username
+  const password = route.params?.password
+  const imagePic = route.params?.imagePic
+
+
 
   useEffect(() => {
-    setImageUri(route.params?.imageUri);
+    setImageUri(route.params?.imagePic);
     setValue(route.params?.blurRadius || 0);
-  }, [route.params?.imageUri, route.params?.blurRadius]);
+  }, [route.params?.imagePic, route.params?.blurRadius]);
 
   const handleContinue = () => {
     // Navigate to 'Pioscreen' when the button is pressed
-    navigation.navigate('PioScreen');
+    navigation.navigate('PioScreen',{
+      phoneNumber:phoneNumber,
+      userName:userName,
+      selectedGender:selectedGender,
+      userBirthday:userBirthday,
+      selectedCountry:selectedCountry,
+      selectedCountryName:selectedCountryName,
+      selectedCity:selectedCity,
+      selectedMathab:selectedMathab,
+      selectedFamily:selectedFamily,
+      selectedMe:selectedMe,
+      selectedCurrent:selectedCurrent,
+      selectedMarr:selectedMarr,
+      selectedKids:selectedKids,
+      selectedHijab:selectedHijab,
+      selectedContact:selectedContact,
+      selectedPrayer:selectedPrayer,
+      selectedSmoke:selectedSmoke,
+      selectedColor:selectedColor,
+      weight:weight,
+      height:height,
+      habits:habits,
+      selectedEdu:selectedEdu,
+      selectedSocity:selectedSocity,
+      imagePic:imagePic,
+       username:username,
+       password:password,
+       value:value
+
+    });
   };
 
   return (

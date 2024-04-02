@@ -2,10 +2,57 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Bar from "react-native-progress/Bar";
+import axios from "axios";
 
 const DailyHabitsQuestion = ({ navigation, route }) => {
   const initialStep = route.params?.currentStep || 19; // Default to 7 if not provided
   const totalSteps = route.params?.totalSteps || 1; // Default to 18 if not provided
+  const selectedGender = route.params?.selectedGender
+  const selectedCountry = route.params?.selectedCountry
+  const selectedMathab = route.params?.selectedMathab
+  const selectedFamily = route.params?.selectedFamily
+  const userName = route.params?.userName
+  const selectedMe = route.params?.userName
+  const selectedEdu = route.params?.selectedEdu
+  const selectedSocity = route.params?.selectedSocity
+  const weight = route.params?.weight
+  const height = route.params?.height
+  const selectedColor = route.params?.selectedColor
+  const selectedSmoke = route.params?.selectedSmoke
+  const selectedPrayer = route.params?.selectedPrayer
+  const selectedContact = route.params?.selectedContact
+  const selectedHijab = route.params?.selectedHijab
+  const selectedCurrent = route.params?.selectedCurrent
+  const selectedMarr = route.params?.selectedMarr
+  const selectedKids = route.params?.selectedKids
+  const selectedCountryName = route.params?.selectedCountryName
+  const selectedCity = route.params?.selectedCity
+  const phoneNumber = route.params?.phoneNumber
+  const userBirthday = route.params?.userBirthday
+console.log(
+  phoneNumber,
+userName,
+  selectedGender,
+  userBirthday,
+  selectedCountry,
+  selectedCountryName,
+  selectedCity,
+  selectedMathab,
+  selectedFamily,
+  selectedMe,
+  selectedCurrent,
+  selectedMarr,
+  selectedKids,
+  selectedHijab,
+  selectedContact,
+  selectedPrayer,
+  selectedSmoke,
+  selectedColor,
+  weight,
+  height,
+  habits
+
+);
   const [habits, setHabits] = useState([
     { id: 1, text: "أحب القراءة", selected: false },
     { id: 2, text: "أمارس التمارين الرياضية بانتظام", selected: false },
@@ -19,13 +66,14 @@ const DailyHabitsQuestion = ({ navigation, route }) => {
   const [currentStep, setCurrentStep] = useState(initialStep);
 
   const toggleHabitSelection = (id) => {
+    console.log(id);
     setHabits((prevHabits) =>
       prevHabits.map((habit) =>
         habit.id === id ? { ...habit, selected: !habit.selected } : habit
       )
     );
   };
-
+console.log("habits",habits);
   const handlePreviousClick = () => {
     if (currentStep > 19) {
       setCurrentStep((prevStep) => prevStep - 1);
@@ -34,12 +82,77 @@ const DailyHabitsQuestion = ({ navigation, route }) => {
     }
   };
 
-  const handleNextClick = () => {
+  const handleNextClick =async () => {
     if (currentStep < totalSteps) {
       setCurrentStep((prevStep) => prevStep + 1);
     } else {
-      navigation.navigate("SignInPage");
+      navigation.navigate("SignInPage",{
+        phoneNumber:phoneNumber,
+        userName:userName,
+        selectedGender:selectedGender,
+        userBirthday:userBirthday,
+        selectedCountry:selectedCountry,
+        selectedCountryName:selectedCountryName,
+        selectedCity:selectedCity,
+        selectedMathab:selectedMathab,
+        selectedFamily:selectedFamily,
+        selectedMe:selectedMe,
+        selectedCurrent:selectedCurrent,
+        selectedMarr:selectedMarr,
+        selectedKids:selectedKids,
+        selectedHijab:selectedHijab,
+        selectedContact:selectedContact,
+        selectedPrayer:selectedPrayer,
+        selectedSmoke:selectedSmoke,
+        selectedColor:selectedColor,
+        weight:weight,
+        height:height,
+        habits:habits,
+        selectedEdu:selectedEdu,
+        selectedSocity:selectedSocity
+
+
+      });
+
+      // try {
+      //   const response = await axios.post(`https://marriage-application.onrender.com/register`, {
+      //     "password": "man99",
+      //     "phone": "12345678912",
+      //     "name": userName,
+      //     "birthdate": "1/7/2002",
+      //     "gender": selectedGender,
+      //     "nationality": "egyptian",
+      //     "live_situation": "alone",
+      //     "living_place": "my home",
+      //     "language_for_communication": "arabic",
+      //     "income": "9000",
+      //     "religious_denomination": selectedMathab,
+      //     "tribal_affiliation": selectedFamily,
+      //     "health_status_woman_man": selectedMe,
+      //     "educational_level_woman_man": selectedEdu,
+      //     "marital_status_woman_man": selectedCurrent,
+      //     "work_status_woman_man": selectedSocity,
+      //     "expected_marriage_date_woman": selectedMarr,
+      //     "fav_communication_woman_man": selectedContact,
+      //     "wearing_hijab_woman_man": selectedHijab,
+      //     "need_kids_woman_man": selectedKids,
+      //     "smoking_drinking_woman_man": selectedSmoke,
+      //     "skin_woman_man": selectedColor,
+      //     "religious_commitment_woman_man": selectedPrayer,
+      //     "daily_habits_woman": selectedTabs,
+      //     "weight_woman": weight,
+      //     "height_woman": height
+
+      //   });
+      //   if (response.status === 200) {
+      //     navigation.navigate("MainHome");
+
+      //   }
+      // } catch (error) {
+      //   console.error('Error fetching data: ', error);
+      // }
     }
+
   };
 
   return (
