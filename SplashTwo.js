@@ -53,7 +53,10 @@ const SplashScreens = () => {
 
   const onPressSkip = () => {
     // Navigate to the login screen when "ابدأ الآن" button is pressed
-    navigation.navigate("Login");
+    navigation.navigate("Login",{
+      "state":"register"
+
+    });
   };
 
   return (

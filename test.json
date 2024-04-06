@@ -1,0 +1,299 @@
+[
+    {
+        "_converter": null,
+        "_document": {
+            "createTime": [SnapshotVersion
+            ],
+            "data": [ObjectValue
+            ],
+            "documentState": 0,
+            "documentType": 1,
+            "key": [DocumentKey
+            ],
+            "readTime": [SnapshotVersion
+            ],
+            "version": [SnapshotVersion
+            ]
+        },
+        "_firestore": [Object
+        ],
+        "_firestoreImpl": [Object
+        ],
+        "_key": {
+            "path": [ResourcePath
+            ]
+        },
+        "_userDataWriter": {
+            "firestore": [Firestore
+            ]
+        },
+        "metadata": {
+            "fromCache": false,
+            "hasPendingWrites": false
+        }
+    },
+    {
+        "_converter": null,
+        "_document": {
+            "createTime": [SnapshotVersion
+            ],
+            "data": [ObjectValue
+            ],
+            "documentState": 0,
+            "documentType": 1,
+            "key": [DocumentKey
+            ],
+            "readTime": [SnapshotVersion
+            ],
+            "version": [SnapshotVersion
+            ]
+        },
+        "_firestore": [Object
+        ],
+        "_firestoreImpl": [Object
+        ],
+        "_key": {
+            "path": [ResourcePath
+            ]
+        },
+        "_userDataWriter": {
+            "firestore": [Firestore
+            ]
+        },
+        "metadata": {
+            "fromCache": false,
+            "hasPendingWrites": false
+        }
+    },
+    {
+        "_converter": null,
+        "_document": {
+            "createTime": [SnapshotVersion
+            ],
+            "data": [ObjectValue
+            ],
+            "documentState": 0,
+            "documentType": 1,
+            "key": [DocumentKey
+            ],
+            "readTime": [SnapshotVersion
+            ],
+            "version": [SnapshotVersion
+            ]
+        },
+        "_firestore": [Object
+        ],
+        "_firestoreImpl": [Object
+        ],
+        "_key": {
+            "path": [ResourcePath
+            ]
+        },
+        "_userDataWriter": {
+            "firestore": [Firestore
+            ]
+        },
+        "metadata": {
+            "fromCache": false,
+            "hasPendingWrites": false
+        }
+    },
+    {
+        "_converter": null,
+        "_document": {
+            "createTime": [SnapshotVersion
+            ],
+            "data": [ObjectValue
+            ],
+            "documentState": 0,
+            "documentType": 1,
+            "key": [DocumentKey
+            ],
+            "readTime": [SnapshotVersion
+            ],
+            "version": [SnapshotVersion
+            ]
+        },
+        "_firestore": [Object
+        ],
+        "_firestoreImpl": [Object
+        ],
+        "_key": {
+            "path": [ResourcePath
+            ]
+        },
+        "_userDataWriter": {
+            "firestore": [Firestore
+            ]
+        },
+        "metadata": {
+            "fromCache": false,
+            "hasPendingWrites": false
+        }
+    },
+    {
+        "_converter": null,
+        "_document": {
+            "createTime": [SnapshotVersion
+            ],
+            "data": [ObjectValue
+            ],
+            "documentState": 0,
+            "documentType": 1,
+            "key": [DocumentKey
+            ],
+            "readTime": [SnapshotVersion
+            ],
+            "version": [SnapshotVersion
+            ]
+        },
+        "_firestore": [Object
+        ],
+        "_firestoreImpl": [Object
+        ],
+        "_key": {
+            "path": [ResourcePath
+            ]
+        },
+        "_userDataWriter": {
+            "firestore": [Firestore
+            ]
+        },
+        "metadata": {
+            "fromCache": false,
+            "hasPendingWrites": false
+        }
+    },
+    {
+        "_converter": null,
+        "_document": {
+            "createTime": [SnapshotVersion
+            ],
+            "data": [ObjectValue
+            ],
+            "documentState": 0,
+            "documentType": 1,
+            "key": [DocumentKey
+            ],
+            "readTime": [SnapshotVersion
+            ],
+            "version": [SnapshotVersion
+            ]
+        },
+        "_firestore": [Object
+        ],
+        "_firestoreImpl": [Object
+        ],
+        "_key": {
+            "path": [ResourcePath
+            ]
+        },
+        "_userDataWriter": {
+            "firestore": [Firestore
+            ]
+        },
+        "metadata": {
+            "fromCache": false,
+            "hasPendingWrites": false
+        }
+    },
+    {
+        "_converter": null,
+        "_document": {
+            "createTime": [SnapshotVersion
+            ],
+            "data": [ObjectValue
+            ],
+            "documentState": 0,
+            "documentType": 1,
+            "key": [DocumentKey
+            ],
+            "readTime": [SnapshotVersion
+            ],
+            "version": [SnapshotVersion
+            ]
+        },
+        "_firestore": [Object
+        ],
+        "_firestoreImpl": [Object
+        ],
+        "_key": {
+            "path": [ResourcePath
+            ]
+        },
+        "_userDataWriter": {
+            "firestore": [Firestore
+            ]
+        },
+        "metadata": {
+            "fromCache": false,
+            "hasPendingWrites": false
+        }
+    },
+    {
+        "_converter": null,
+        "_document": {
+            "createTime": [SnapshotVersion
+            ],
+            "data": [ObjectValue
+            ],
+            "documentState": 0,
+            "documentType": 1,
+            "key": [DocumentKey
+            ],
+            "readTime": [SnapshotVersion
+            ],
+            "version": [SnapshotVersion
+            ]
+        },
+        "_firestore": [Object
+        ],
+        "_firestoreImpl": [Object
+        ],
+        "_key": {
+            "path": [ResourcePath
+            ]
+        },
+        "_userDataWriter": {
+            "firestore": [Firestore
+            ]
+        },
+        "metadata": {
+            "fromCache": false,
+            "hasPendingWrites": false
+        }
+    },
+    {
+        "_converter": null,
+        "_document": {
+            "createTime": [SnapshotVersion
+            ],
+            "data": [ObjectValue
+            ],
+            "documentState": 0,
+            "documentType": 1,
+            "key": [DocumentKey
+            ],
+            "readTime": [SnapshotVersion
+            ],
+            "version": [SnapshotVersion
+            ]
+        },
+        "_firestore": [Object
+        ],
+        "_firestoreImpl": [Object
+        ],
+        "_key": {
+            "path": [ResourcePath
+            ]
+        },
+        "_userDataWriter": {
+            "firestore": [Firestore
+            ]
+        },
+        "metadata": {
+            "fromCache": false,
+            "hasPendingWrites": false
+        }
+    }
+]

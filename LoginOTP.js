@@ -8,15 +8,21 @@ import {
   SafeAreaView,
   ScrollView,
   Alert,
+  Keyboard,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import axios from 'axios';
+import { useSelector } from 'react-redux';
 
-const LoginOTP = ({route}) => {
-  const [digits, setDigits] = useState(["", "", "", "","",""]);
+const LoginOTP = ({ route }) => {
+  const [digits, setDigits] = useState(["", "", "", "", "", ""]);
   const [countdown, setCountdown] = useState(15); // 15 seconds countdown
   const navigation = useNavigation();
   const phoneNumber = route.params?.phoneNumber
+  const msgCode = route.params?.msgCode
+  const state = route.params?.state
+	const userinfo = useSelector((state) => state);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -35,28 +41,82 @@ const LoginOTP = ({route}) => {
     if (value && index < digits.length - 1) {
       refs[index + 1]?.current?.focus();
     }
-
     setDigits(updatedDigits);
+    const strNumber = arrayToNumber(updatedDigits)
+    if (strNumber.toString().length == 6) {
+      Keyboard.dismiss();
+    }
+
+
   };
 
   const handleSubmit = () => {
-    navigation.navigate("Splashsc");
-    const otpCode = digits.join("");
-    console.log("OTP Code:", otpCode);
+    Alert.alert('ldkjdvfs')
+    // navigation.navigate("Splashsc");
+    // const otpCode = digits.join("");
+    // console.log("OTP Code:", otpCode);
   };
 
   const handleTextPress = () => {
-    console.log("Text pressed");
+    if (countdown == 0) {
+      console.log("Text pressed", countdown);
+
+    }
   };
 
   const handlePreviousClick = () => {
-    navigation.navigate("Login");
+    navigation.goBack();
   };
+  function arrayToNumber(arr) {
+    // Join the array of digits into a string
+    const numString = arr.join('');
 
-  const handleNextClick = () => {
-    navigation.navigate("GeneralQ",{
-      phoneNumber:phoneNumber
-    });
+    // Convert the string to a number
+    const number = parseInt(numString, 10);
+    return number;
+  }
+  const handleNextClick =async () => {
+
+
+    const number = arrayToNumber(digits);
+    console.log(msgCode === number);
+    if (msgCode === number) {
+      if (state === "ChangePhone") {
+
+        try {
+          const response = await axios.post(`https://marriage-application.onrender.com/changephone?id=${userinfo.user.userArray.id}&new_phone=${phoneNumber}`);
+  
+          if (response.status === 200) {
+            console.log(response.data);
+            if (response.data === true) {
+              Alert.alert('تم تغيير الرقم بنجاح')
+              navigation.navigate('MainHome');
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching data: ',error.response.data);
+        }
+      } else {
+
+        navigation.navigate("GeneralQ", {
+          phoneNumber: phoneNumber
+        });
+      }
+
+
+    } else {
+      Alert.alert('الرمز غير صحيح')
+    }
+
+
+    // if(state==="ChangePhone"){
+    //   navigation.navigate('MainHome');
+    //     }else{
+    //   navigation.navigate("GeneralQ",{
+    //     phoneNumber:phoneNumber
+    //   });
+    // }
+
   };
 
   const refs = Array.from({ length: digits.length }, () => React.createRef());
@@ -87,11 +147,15 @@ const LoginOTP = ({route}) => {
           ))}
         </View>
 
-        <TouchableOpacity onPress={handleTextPress}>
           <Text style={styles.resendText}>
             لم أتلق الرمز ({countdown} ثانية)
           </Text>
-        </TouchableOpacity>
+        {countdown == 0 &&
+          <TouchableOpacity onPress={handleTextPress}>
+            <Text style={styles.resendText}>اعادة ارسال الرمز</Text>
+
+          </TouchableOpacity>
+        }
       </ScrollView>
 
       <View style={styles.circularButtonsContainer}>

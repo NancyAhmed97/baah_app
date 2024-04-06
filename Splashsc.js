@@ -22,7 +22,7 @@ const Splashsc = () => {
 
 				} else {
 					const timer = setTimeout(() => {
-						navigation.replace('SignInPage');
+						navigation.replace('SplashTwo');
 					}, 3000);
 					return () => clearTimeout(timer);
 

@@ -12,7 +12,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { userMethod } from "./Redux/user";
 
-const PioScreen = ({route}) => {
+const PioScreen = ({ route }) => {
   const [pio, setPio] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigation = useNavigation(); // Get the navigation object
@@ -47,10 +47,10 @@ const PioScreen = ({route}) => {
 
 
 
-  const handleContinue =async () => {
+  const handleContinue = async () => {
     if (pio.length <= 140) {
-      const habitArrayText=[]
-      const habitArray=habits.filter((item)=>item.selected==true)
+      const habitArrayText = []
+      const habitArray = habits.filter((item) => item.selected == true)
       for (let index = 0; index < habitArray.length; index++) {
         const element = habitArray[index];
         habitArrayText.push(element.text)
@@ -62,74 +62,74 @@ const PioScreen = ({route}) => {
         "gender": selectedGender,
         "birthdate": userBirthday,
         "nationality": selectedCountry.name,
-        "country":selectedCountryName.name_ar,
-    "city":selectedCity.name_ar,
-    "religious_denomination": selectedMathab,
-    "tribal_affiliation": selectedFamily,
-    "work_status_woman_man": selectedCurrent,
-    "marital_status_woman_man": selectedSocity,
-    "expected_marriage_date_woman": selectedMarr,
-    "need_kids_woman_man": selectedKids,
-    "wearing_hijab_woman_man": selectedHijab,
-    "fav_communication_woman_man": selectedContact,
-    "religious_commitment_woman_man": selectedPrayer,
-    "smoking_drinking_woman_man": selectedSmoke,
-    "skin_woman_man": selectedColor,
-    "weight_woman": weight,
-    "height_woman": height,
-    "daily_habits_woman": habitArrayText,
-    "image":imagePic,
-    "username":username,
-    "password":password,
-    "health_status_woman_man": selectedMe,
-     "educational_level_woman_man": selectedEdu,
-    "pio":pio,
-      
+        "country": selectedCountryName.name_ar,
+        "city": selectedCity.name_ar,
+        "religious_denomination": selectedMathab,
+        "tribal_affiliation": selectedFamily,
+        "work_status_woman_man": selectedCurrent,
+        "marital_status_woman_man": selectedSocity,
+        "expected_marriage_date_woman": selectedMarr,
+        "need_kids_woman_man": selectedKids,
+        "wearing_hijab_woman_man": selectedHijab,
+        "fav_communication_woman_man": selectedContact,
+        "religious_commitment_woman_man": selectedPrayer,
+        "smoking_drinking_woman_man": selectedSmoke,
+        "skin_woman_man": selectedColor,
+        "weight_woman": weight,
+        "height_woman": height,
+        "daily_habits_woman": habitArrayText,
+        "image": imagePic,
+        "username": username,
+        "password": password,
+        "health_status_woman_man": selectedMe,
+        "educational_level_woman_man": selectedEdu,
+        "pio": pio,
+
       });
 
 
 
 
 
-//  try {
-//    const response = await axios.post(`https://marriage-application.onrender.com/register`, {
-//     "phone": phoneNumber,
-//     "name": userName,
-//     "gender": selectedGender,
-//     "birthdate": userBirthday,
-//     "nationality": selectedCountry.name,
-//     "country":selectedCountryName.name_ar,
-// "city":selectedCity.name_ar,
-// "religious_denomination": selectedMathab,
-// "tribal_affiliation": selectedFamily,
-// "work_status_woman_man": selectedCurrent,
-// "marital_status_woman_man": selectedSocity,
-// "expected_marriage_date_woman": selectedMarr,
-// "need_kids_woman_man": selectedKids,
-// "wearing_hijab_woman_man": selectedHijab,
-// "fav_communication_woman_man": selectedContact,
-// "religious_commitment_woman_man": selectedPrayer,
-// "smoking_drinking_woman_man": selectedSmoke,
-// "skin_woman_man": selectedColor,
-// "weight_woman": weight,
-// "height_woman": height,
-// "daily_habits_woman": habitArrayText,
-// "image":imagePic,
-// "username":username,
-// "password":password,
-// "health_status_woman_man": selectedMe,
-//  "educational_level_woman_man": selectedEdu,
-// "pio":pio,
+      try {
+        const response = await axios.post(`https://marriage-application.onrender.com/register`, {
+          "phone": phoneNumber,
+          "name": userName,
+          "gender": selectedGender,
+          "birthdate": userBirthday,
+          "nationality": selectedCountry.name,
+          "country": selectedCountryName.name_ar,
+          "city": selectedCity.name_ar,
+          "religious_denomination": selectedMathab,
+          "tribal_affiliation": selectedFamily,
+          "work_status_woman_man": selectedCurrent,
+          "marital_status_woman_man": selectedSocity,
+          "expected_marriage_date_woman": selectedMarr,
+          "need_kids_woman_man": selectedKids,
+          "wearing_hijab_woman_man": selectedHijab,
+          "fav_communication_woman_man": selectedContact,
+          "religious_commitment_woman_man": selectedPrayer,
+          "smoking_drinking_woman_man": selectedSmoke,
+          "skin_woman_man": selectedColor,
+          "weight_woman": weight,
+          "height_woman": height,
+          "daily_habits_woman": habitArrayText,
+          "image": imagePic,
+          "username": username,
+          "password": password,
+          "health_status_woman_man": selectedMe,
+          "educational_level_woman_man": selectedEdu,
+          "pio": pio,
 
-//    });
-//    if (response.status === 200) {
-//     dispatch(userMethod(response.data))
-//     navigation.navigate('MainHome')
+        });
+        if (response.status === 200) {
+          dispatch(userMethod(response.data))
+          navigation.navigate('MainHome')
 
-//    }
-//  } catch (error) {
-//    console.error('Error fetching data: ', error);
-//  }
+        }
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      }
 
       // navigation.navigate("MainHome"); // Navigate to the home screen
     } else {

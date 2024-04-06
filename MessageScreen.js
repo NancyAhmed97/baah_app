@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  ScrollView,
+  Dimensions,
 } from "react-native";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "./Firebase-config";
@@ -17,6 +19,7 @@ const Inbox = ({ navigation }) => {
   const [data, setData] = useState([]);
   const messages = useSelector((state) => state);
 
+  // console.log(messages.messages.messagesArray[0][0]);
 
   // const [messages, setMessages] = useState([
   //   {
@@ -57,49 +60,91 @@ const Inbox = ({ navigation }) => {
   // }, [])
   // Function to navigate to message details
   const handleMessagePress = (message) => {
-    navigation.navigate("chat", { participant: message.data().senderId });
+    navigation.navigate("chat", { participant: message.senderId });
   };
 
   // Render each message item
-  const renderMessageItem = ({ item }) => {
-    let milliseconds = item.data().createdAt.seconds * 1000 + Math.round(item.data().createdAt.nanoseconds / 1e6);
+  // const renderMessageItem = ({ item }) => {
+  //   let milliseconds = item.data().createdAt.seconds * 1000 + Math.round(item.data().createdAt.nanoseconds / 1e6);
 
-    const date = new Date(milliseconds);
-
-
-
-    return (
-      <TouchableOpacity
-        onPress={() => handleMessagePress(item)}
-        style={styles.messageItem}
-      >
-        <Text
-          style={{
-            textAlign: 'right'
-          }}
-        >
+  //   const date = new Date(milliseconds);
 
 
-          {JSON.stringify(date).substring(1, JSON.stringify(date).length - 15)}
-        </Text>
+  //   console.log("item", item);
+  //   return (
+  //     <Text>
+  //       dflkjafdkl
+  //     </Text>
+  //     // <TouchableOpacity
+  //     //   onPress={() => handleMessagePress(item)}
+  //     //   style={styles.messageItem}
+  //     // >
+  //     //   <Text
+  //     //     style={{
+  //     //       textAlign: 'right'
+  //     //     }}
+  //     //   >
 
-        <View style={styles.messageContent}>
-          <Text style={styles.sender}>{item.sender}</Text>
-          <Text style={styles.content}>{item.data().text}</Text>
-        </View>
-        <Image source={require("./assets/pp.png")} style={styles.profileImage} />
-      </TouchableOpacity>
-    )
-  }
+
+  //     //     {JSON.stringify(date).substring(1, JSON.stringify(date).length - 15)}
+  //     //   </Text>
+
+  //     //   <View style={styles.messageContent}>
+  //     //     <Text style={styles.sender}>{item.sender}</Text>
+  //     //     <Text style={styles.content}>{item.data().text}</Text>
+  //     //   </View>
+  //     //   <Image source={require("./assets/pp.png")} style={styles.profileImage} />
+  //     // </TouchableOpacity>
+  //   )
+  // }
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={messages.messages.messagesArray} // Reverse the order of messages
+      <ScrollView
+
+      >
+        {messages.messages.messagesArray[0] &&
+
+          messages.messages.messagesArray.map((item) => {
+            console.log(item[0]);
+            let milliseconds = item[0].createdAt.seconds * 1000 + Math.round(item[0].createdAt.nanoseconds / 1e6);
+
+            const date = new Date(milliseconds);
+
+            return (
+              <TouchableOpacity
+                onPress={() => handleMessagePress(item[0])}
+                style={styles.messageItem}
+              >
+                <Text
+                  style={{
+                    textAlign: 'right'
+                  }}
+                >
+
+
+                  {JSON.stringify(date).substring(1, JSON.stringify(date).length - 15)}
+                </Text>
+                  <View style={styles.messageContent}>
+          <Text style={styles.sender}>{item[0].name}</Text>
+          <Text style={styles.content}>{item[0].text}</Text>
+        </View>
+        <Image source={item[0].img?item[0].require(img):require("./assets/pp.png")} style={styles.profileImage} />
+
+
+              </TouchableOpacity>
+            )
+          })
+        }
+      </ScrollView>
+
+
+      {/* <FlatList
+        data={messages.messages.messagesArray[0][0]} // Reverse the order of messages
         keyExtractor={(item) => item.data().user.toString()}
         renderItem={renderMessageItem}
         contentContainerStyle={styles.flatListContent}
-      />
+      /> */}
     </View>
   );
 };

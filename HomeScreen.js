@@ -57,7 +57,6 @@ const Card = ({ card, toggleFavorite, isFavorite, favArr }) => {
     navigation.navigate("UserProfile", { userId: card.id });
   };
   const userinfo = useSelector((state) => state);
-  console.log(userinfo.favorite);
   const favStatus = favArr.filter((item) => { return card.id == item.id })
   return (
     <TouchableOpacity onPress={handleCardPress}>
@@ -113,7 +112,6 @@ const Card = ({ card, toggleFavorite, isFavorite, favArr }) => {
                 const response = await axios.post(`https://marriage-application.onrender.com/addtofav?id=${userinfo.user.userArray.id}&favId=${card.id}`);
                 // Alert.alert(response.data)
                 if (response.status) {
-                  console.log(response.data);
                   toggleFavorite(card.id)
                   Alert.alert(response.data)
                   if (response.data === "User added to fav") {
@@ -221,21 +219,22 @@ const HomeScreen = () => {
         Alert.alert(err)
       }
 
-      // try {
-      //   const response = await axios.post(`https://marriage-application.onrender.com/getfav?id=${userinfo.user.userArray.id}`);
-      //   dispatch(favoriteMethod(response.data))
-      //   setFavArr(response.data)
-      // } catch (err) {
-      //   Alert.alert(err)
-      // }
+   
+  const querySnapshot = await getDocs(collection(db, "messages"));
+  const myMsg=querySnapshot.docs.filter((item)=>item.data().user==userinfo.user.userArray.id)
+  const idMap = {};
+  myMsg.forEach((msgs)=>{
+    console.log(msgs.data().senderId);
+    if (idMap[msgs.data().senderId]) {
+      idMap[msgs.data().senderId].push(msgs.data());
+    } else {
+      idMap[msgs.data().senderId] = [msgs.data()];
+    }
+  })
+  const resultArrays = Object.values(idMap);
+dispatch(messagesMethod(resultArrays))
 
-      const querySnapshot = await getDocs(collection(db, "messages"));
-      const x = firebase.firestore.docs.filter((item) => item.data().user === userinfo.user.userArray.id)
-      dispatch(messagesMethod(x))
-
-
-
-    };
+   };
     checkLogin();
   }, [])
 

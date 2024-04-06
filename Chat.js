@@ -33,34 +33,35 @@ const Chat = ({route}) => {
     const userId = route.params?.userId
     const name = route.params?.name
     const image = route.params?.image
+    const userinfo = useSelector((state) => state);
 
     const participant = route.params?.participant
-    const messagesArray = useSelector((state) => state.messages);
-        const messagesRef = collection(db, "messages");
-const x=messagesArray.messagesArray.filter((item)=>item.data().senderId==userId)
-console.log("x",x);
+//     const messagesArray = useSelector((state) => state.messages);
+//         const messagesRef = collection(db, "messages");
+// const x=messagesArray.messagesArray.filter((item)=>item.data().senderId==userId)
+// console.log("x",x);
   // console.log("userId",userId);
   // console.log("item",item.data().senderId);
 
-    useEffect(() => {
-      const queryMessages = query(
-        messagesRef,
-        orderBy("createdAt")
-      );
-      const unsuscribe = onSnapshot(queryMessages, (snapshot) => {
-        let messages = [];
-        snapshot.forEach((doc) => {
-          messages.push({ ...doc.data(), id: doc.id });
-        });
-      setMessages(messages);
-      });
+    // useEffect(() => {
+    //   const queryMessages = query(
+    //     messagesRef,
+    //     orderBy("createdAt")
+    //   );
+    //   const unsuscribe = onSnapshot(queryMessages, (snapshot) => {
+    //     let messages = [];
+    //     snapshot.forEach((doc) => {
+    //       messages.push({ ...doc.data(), id: doc.id });
+    //     });
+    //   setMessages(messages);
+    //   });
     
-      return () => unsuscribe();
+    //   return () => unsuscribe();
     
 
 
 
-    }, [])
+    // }, [])
 
     const handleSend =async () => {
       const token = await AsyncStorage.getItem("login");
@@ -68,7 +69,7 @@ console.log("x",x);
         await addDoc(messagesRef, {
             text: message,
             createdAt: serverTimestamp(),
-            user: JSON.parse(token).id,
+            user:userinfo.user.userArray.id,
             senderId:userId,
             img:'',
             name:name
