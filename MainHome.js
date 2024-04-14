@@ -339,7 +339,10 @@ const Sidebar = ({ onClose = () => { } }) => {
             onPress={async () => {
               if (item.screenName === "Logout") {
                 dispatch(userMethod({}))
-                navigation.navigate("Login");
+                navigation.navigate("Login",{
+                  "state":"register"
+            
+                });
 
               } else {
                 handleNavigation(item.screenName)

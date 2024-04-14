@@ -50,7 +50,10 @@ const SettingsScreen = ({ navigation }) => {
 
   const handleLogout = async () => {
     dispatch(userMethod({}))
-    navigation.navigate("Login");
+    navigation.navigate("Login",{
+      "state":"register"
+
+    });
   };
 
   const handleDeleteAccount = async () => {
@@ -58,7 +61,10 @@ const SettingsScreen = ({ navigation }) => {
       const response = await axios.post(`https://marriage-application.onrender.com/deleteaccount?id=${reducState.user.userArray.id}`);
       if (response.status === 200) {
         console.log(response.data);
-        navigation.navigate('Login')
+        navigation.navigate('Login',{
+          "state":"register"
+    
+        })
       }
     } catch (error) {
       console.error('Error fetching data: ', error.data);

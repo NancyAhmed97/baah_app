@@ -58,15 +58,22 @@ const Card = ({ card, toggleFavorite, isFavorite, favArr }) => {
   };
   const userinfo = useSelector((state) => state);
   const favStatus = favArr.filter((item) => { return card.id == item.id })
+
+  console.log(card.image);
+
+
   return (
     <TouchableOpacity onPress={handleCardPress}>
       <View style={styles.card}>
         <View style={{ flexDirection: "row-reverse", alignItems: "center" }}>
-          <Image
-            source={{ uri: card.image }}
+          {/* <Image
+            source={require('./assets/girltt.jpg')}
             style={styles.profileImage}
             resizeMode="cover"
+          /> */}
+          <Image source={{ uri: card.image }} style={styles.profileImage} resizeMode="cover"
           />
+
           <View style={{ flex: 1, alignItems: "flex-end", marginRight: 10 }}>
             <Text style={styles.name}>{card.name}</Text>
             <View
@@ -77,7 +84,7 @@ const Card = ({ card, toggleFavorite, isFavorite, favArr }) => {
               }}
             >
               <Icon name="location" size={20} />
-              <Text style={styles.detailText}>{card.nationality}</Text>
+              <Text style={styles.detailText}>{card.country},{card.city}</Text>
             </View>
             <View
               style={{
@@ -100,7 +107,7 @@ const Card = ({ card, toggleFavorite, isFavorite, favArr }) => {
           <TouchableOpacity
             style={[styles.gradientButton, styles.messageButton]}
             onPress={() => {
-              navigation.navigate("chat", { userId: card.id, name: card.name, image: card.image });
+              navigation.navigate("chat", { participant: card.id, name: card.name, image: card.image });
             }}
           >
             <Icon name="envelope" size={30} style={styles.icon} />
@@ -219,22 +226,22 @@ const HomeScreen = () => {
         Alert.alert(err)
       }
 
-   
-  const querySnapshot = await getDocs(collection(db, "messages"));
-  const myMsg=querySnapshot.docs.filter((item)=>item.data().user==userinfo.user.userArray.id)
-  const idMap = {};
-  myMsg.forEach((msgs)=>{
-    console.log(msgs.data().senderId);
-    if (idMap[msgs.data().senderId]) {
-      idMap[msgs.data().senderId].push(msgs.data());
-    } else {
-      idMap[msgs.data().senderId] = [msgs.data()];
-    }
-  })
-  const resultArrays = Object.values(idMap);
-dispatch(messagesMethod(resultArrays))
 
-   };
+      const querySnapshot = await getDocs(collection(db, "messages"));
+      const myMsg = querySnapshot.docs.filter((item) => item.data().user == userinfo.user.userArray.id)
+      const idMap = {};
+      myMsg.forEach((msgs) => {
+        console.log(msgs.data().senderId);
+        if (idMap[msgs.data().senderId]) {
+          idMap[msgs.data().senderId].push(msgs.data());
+        } else {
+          idMap[msgs.data().senderId] = [msgs.data()];
+        }
+      })
+      const resultArrays = Object.values(idMap);
+      dispatch(messagesMethod(resultArrays))
+
+    };
     checkLogin();
   }, [])
 

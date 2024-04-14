@@ -14,7 +14,6 @@ import { useSelector } from "react-redux";
 const ProfileContainer = () => {
   const [profile, setProfile] = useState({})
   const userinfo = useSelector((state) => state);
-
   // Mock profile data
   // const profile = {
   //   name: "محمد غالي",

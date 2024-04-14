@@ -24,7 +24,7 @@ const Login = ({ route }) => {
   const [msgCode, setmsgCodeCode] = useState(null);
 
   const navigation = useNavigation();
-  const state = route.params ? route.params.state:""
+  const state = route.params.state
   console.log("state", state);
   const onSelectCountry = (country) => {
     setCountryPickerVisible(false);
@@ -46,12 +46,16 @@ const Login = ({ route }) => {
         });
 
         if (response.status === 200) {
-          console.log(response.data);
           if (response.data == true) {
             if (state === "ChangePhone") {
               Alert.alert('هذا الرقم مسجل لدينا')
             } else {
-              navigation.navigate("LogInPage");
+              navigation.navigate("LogInPage",{
+                msgCode: 121212,
+                state: route.params.state,
+                phoneNumber: '+' + callingCode + phoneNumber
+  
+              });
 
             }
           } else {

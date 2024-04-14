@@ -31,6 +31,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { StyleSheet } from "react-native";
 import ForgotPasswordScreen from "./ForgotPasswordScreen";
 import PasswordResetConfirmationScreen from "./PasswordResetConfirmationScreen";
+import NewChat from "./NewChat";
 
 
 const Stack = createStackNavigator();
@@ -75,7 +76,8 @@ const App = () => {
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
         <Stack.Screen name="VerifyPass" component={VerifyPassScreen} />
         <Stack.Screen name="Subscription" component={Subscription} />
-        <Stack.Screen name="chat" component={Chat} />
+        {/* <Stack.Screen name="chat" component={Chat} /> */}
+        <Stack.Screen name="chat" component={NewChat} />
         <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
         <Stack.Screen name="AboutApp" component={AboutApp} />
         <Stack.Screen name="PaymentScreen" component={PaymentScreen} />

@@ -17,7 +17,7 @@ import { useDispatch } from "react-redux";
 import { userMethod } from "./Redux/user";
 
 
-const ProfileScreen = () => {
+const ProfileScreen = ({route}) => {
   const [showOptions, setShowOptions] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -69,11 +69,13 @@ const dispatch=useDispatch()
       return;
     }
     setPasswordError("");
-
+console.log(          "username" ,username, 
+"password", password,
+);
     try {
       const response = await axios.post(`https://marriage-application.onrender.com/login`,
         {
-          "name" :username, 
+          "username" :username, 
           "password": password,
      
       

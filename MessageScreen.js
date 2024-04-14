@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   View,
   FlatList,
@@ -10,7 +10,13 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  orderBy,
+  query,
+  onSnapshot
+} from "firebase/firestore";
 import { db } from "./Firebase-config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSelector } from "react-redux";
@@ -18,8 +24,70 @@ import { useSelector } from "react-redux";
 const Inbox = ({ navigation }) => {
   const [data, setData] = useState([]);
   const messages = useSelector((state) => state);
+  const userinfo = useSelector((state) => state);
 
-  // console.log(messages.messages.messagesArray[0][0]);
+  useLayoutEffect(() => {
+    const collectionRef = collection(db, 'messagesList');
+    const q = query(collectionRef, orderBy('createdAt', 'desc'));
+    const unsubscribe = onSnapshot(q, querySnapshot => {
+      const myMsg = querySnapshot.docs.filter((item) => item.data().sendBy == userinfo.user.userArray.id)
+      const myMsg1 = querySnapshot.docs.filter((item) => item.data().sendTo == userinfo.user.userArray.id)
+      const combined = myMsg.concat(myMsg1);
+      const idMap = {};
+      combined.forEach((msgs)=>{
+        console.log("msgs",msgs);
+        if (idMap[msgs.data().sendTo]) {
+          idMap[msgs.data().sendTo].push(msgs.data());
+
+        }else{
+          idMap[msgs.data().sendTo] = [msgs.data()];
+        }
+      })
+    console.log("idMap",Object.values(idMap)[0].length);
+      const resultArrays = Object.values(idMap);
+      const resultArrays1=resultArrays.filter((item)=>item[0].sendBy!==userinfo.user.userArray.id)
+      setData(resultArrays1)
+        })
+    // const unsubscribe = onSnapshot(q, querySnapshot => {
+
+
+
+    //     // const myMsg=querySnapshot.docs.filter((item)=>item.data()._id==userinfo.user.userArray.id)
+    //     // const idMap = {};
+    //     // console.log("kjvcm,.",myMsg);
+    //     // myMsg.forEach((msgs)=>{
+    //     //   console.log("msgs",msgs.data().user._id);
+    //     //   if (idMap[msgs.data().user._id]) {
+    //     //     idMap[msgs.data().user._id].push(msgs.data());
+    //     //   }else{
+    //     //     idMap[msgs.data().user._id] = [msgs.data()];
+
+    //     //   }
+    //     // })
+    //     // const resultArrays = Object.values(idMap);
+    //     // setData(resultArrays)
+    //     // console.log("dfsjf",resultArrays);
+    //     // // myMsg.forEach((msgs)=>{
+    //     // //   console.log("msgs",msgs);
+    //     // //   if (idMap[msgs.data().senderId]) {
+    //     // //     idMap[msgs.data().senderId].push(msgs.data());
+    //     // //   } else {
+    //     // //     idMap[msgs.data().senderId] = [msgs.data()];
+    //     // //   }
+    //     // // })
+    //     // // const resultArrays = Object.values(idMap);
+
+    //     // // setMessages(
+    //     // //     querySnapshot.docs.map(doc => ({
+    //     // //         _id: doc.data()._id,
+    //     // //         createdAt: doc.data().createdAt.toDate(),
+    //     // //         text: doc.data().text,
+    //     // //         user: doc.data().user
+    //     // //     }))
+    //     // // );
+    // });
+    return unsubscribe;
+  }, []);  // console.log(messages.messages.messagesArray[0][0]);
 
   // const [messages, setMessages] = useState([
   //   {
@@ -60,7 +128,10 @@ const Inbox = ({ navigation }) => {
   // }, [])
   // Function to navigate to message details
   const handleMessagePress = (message) => {
-    navigation.navigate("chat", { participant: message.senderId });
+    console.log("message",message);
+    // navigation.navigate("chat", { participant: message.senderId });
+ navigation.navigate("chat", { participant: message.sendTo==userinfo.user.userArray.id?message.sendBy:message.sendTo, name: message.name&&message.name, image: message.image&&message.image  });
+
   };
 
   // Render each message item
@@ -103,14 +174,10 @@ const Inbox = ({ navigation }) => {
       <ScrollView
 
       >
-        {messages.messages.messagesArray[0] &&
+        {data[0] &&
 
-          messages.messages.messagesArray.map((item) => {
-            console.log(item[0]);
-            let milliseconds = item[0].createdAt.seconds * 1000 + Math.round(item[0].createdAt.nanoseconds / 1e6);
-
-            const date = new Date(milliseconds);
-
+          data.map((item) => {
+      var date = new Date(item[0].createdAt);
             return (
               <TouchableOpacity
                 onPress={() => handleMessagePress(item[0])}
@@ -121,15 +188,14 @@ const Inbox = ({ navigation }) => {
                     textAlign: 'right'
                   }}
                 >
+                  {JSON.stringify(date).slice(1,11)}
 
-
-                  {JSON.stringify(date).substring(1, JSON.stringify(date).length - 15)}
                 </Text>
-                  <View style={styles.messageContent}>
-          <Text style={styles.sender}>{item[0].name}</Text>
-          <Text style={styles.content}>{item[0].text}</Text>
-        </View>
-        <Image source={item[0].img?item[0].require(img):require("./assets/pp.png")} style={styles.profileImage} />
+                <View style={styles.messageContent}>
+                  <Text style={styles.sender}>{item[0].name && item[0].name}</Text>
+                  <Text style={styles.content}>{item[0].msg}</Text>
+                </View>
+                <Image source={item[0].image ? { uri: item[0].image } : require("./assets/pp.png")} style={styles.profileImage} />
 
 
               </TouchableOpacity>

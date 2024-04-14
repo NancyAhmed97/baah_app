@@ -98,7 +98,6 @@ const Profile = () => {
 
     if (!result.cancelled) {
       // setImages1(images1=>[...images1, result.assets[0].uri])
-      console.log(userinfo.user.userArray.id, result.assets[0].uri);
       try {
 
         const response = await axios.post(`https://marriage-application.onrender.com/setimages`, {
@@ -135,7 +134,6 @@ const Profile = () => {
     }
 
   };
-  console.log("images1", images1[0]);
 
   const handleChooseImage = async () => {
     const permissionResult =
@@ -185,7 +183,6 @@ const Profile = () => {
       console.log("Image selection cancelled");
     }
   };
-  console.log(userinfo.user.userArray.image_array);
   const goToSubscription = () => {
     useNavigation.navigate("Subscription");
   };
@@ -205,7 +202,6 @@ const Profile = () => {
         "id": userinfo.user.userArray.id,
       });
       if (response.status) {
-        console.log(response.data);
         dispatch(userMethod(response.data));
         setModalVisible(false);
 

@@ -574,7 +574,7 @@ const styles = StyleSheet.create({
     borderColor: "#F2F2F2",
     marginVertical: 100,
     textAlign: "right",
-    fontSize: "20",
+    fontSize: 20,
     fontWeight: "bold",
   },
   questionText: {
